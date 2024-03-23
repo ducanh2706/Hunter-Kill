@@ -25,26 +25,30 @@ T randFloat(T l, T r){
 }
 
 void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *src, int x, int y);
+void calcSlope(int x1, int y1, int x2, int y2, float *dx, float *dy);
 
 struct Game{
     Entity *player;
     std::list<Entity*> enemies;
+    std::list<Entity*> bullets;
 
-    static const int ENEMIES_NUMBER = 3;
+    static const int ENEMIES_NUMBER = 1;
     static constexpr int direction_x[4] = {0, 0, -1, 1};
     static constexpr int direction_y[4] = {-1, 1, 0, 0};
 
     SDL_Texture *player_texture, *enemy_texture;
-
-
     SDL_Texture *background_texture;
+    SDL_Texture *bullet_texture;
 
     void initPlayer(){
         player = new Entity();
-        player->x = player->y = 200;
+        player->x = PLAYER_INIT_X;
+        player->y = PLAYER_INIT_Y;
         player->dx = player->dy = PLAYER_SPEED;
         player->texture = player_texture;
         player->direction = RIGHT;
+        player->side = PLAYER_SIDE;
+        player->health = 1;
         SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
     }
 
@@ -53,16 +57,19 @@ struct Game{
             Entity *enemy = new Entity();
             enemy->x = randInt(1, SCREEN_WIDTH);
             enemy->y = randInt(1, SCREEN_HEIGHT);
-            std::cout << enemy->x << " " << enemy->y << std::endl;
             enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->texture = enemy_texture;
             enemy->direction = RIGHT;
+            enemy->side = ENEMY_SIDE;
+            enemy->changeSide = FPS * 2;
+            enemy->health = 1;
             SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
             enemies.push_back(enemy); 
         }
     }
 
     void initBackground(Graphics *graphics){
+
     }
 
 
@@ -70,6 +77,7 @@ struct Game{
         player_texture = graphics->loadTexture(PLAYER_IMG_SOURCE);
         enemy_texture = graphics->loadTexture(ENEMY_IMG_SOURCE);
         background_texture = graphics->loadTexture(BACKGROUND_IMG_SOURCE);
+        bullet_texture = graphics->loadTexture(BULLET_IMG_SOURCE);
     }
 
     void init(Graphics *graphics){
@@ -102,17 +110,20 @@ struct Game{
 
     void doEnemy(){
         for (auto &enemy : enemies){
-            --enemy->side;
-            if (enemy->side == 0){
+            if (enemy->inRange(player) && --enemy->reload <= 0){
+                fireBullet(enemy);
+            }
+            enemy->x += enemy->dx * direction_x[enemy->direction];
+            enemy->y += enemy->dy * direction_y[enemy->direction];
+            --enemy->changeSide;
+            if (enemy->changeSide == 0){
                 int prevDirection = enemy->direction;
                 enemy->direction = (Direction)randInt(0, 3);
                 while (enemy->direction == prevDirection) {
                     enemy->direction = (Direction)randInt(0, 3);
                 }
-                enemy->side = FPS * 2;
+                enemy->changeSide = FPS * 2;
             }
-            enemy->x += enemy->dx * direction_x[enemy->direction];
-            enemy->y += enemy->dy * direction_y[enemy->direction];
         }
     }
 
@@ -129,10 +140,48 @@ struct Game{
         }
     }
 
+    void fireBullet(Entity *enemy){
+        Entity *bullet = new Entity();
+        bullet->x = enemy->x;
+        bullet->y = enemy->y;
+        bullet->side = ENEMY_SIDE;
+        bullet->texture = bullet_texture;
+        bullet->health = 1;
+        bullets.push_back(bullet);
+
+        SDL_QueryTexture(bullet->texture, NULL, NULL, &bullet->w, &bullet->h);
+        bullet->x += (enemy->w / 2) - (bullet->w / 2);
+        bullet->y += (enemy->h / 2) - (bullet->h / 2);
+
+        calcSlope(player->x + (player->w / 2), player->y + (player->h / 2), enemy->x, enemy->y, &bullet->dx, &bullet->dy);
+        bullet->dx *= BULLET_SPEED;
+        bullet->dy *= BULLET_SPEED;
+
+        enemy->reload = FPS / 3;
+    }
+
+    void doBullet(){
+        auto ins = bullets.begin();
+        
+        while (ins != bullets.end()){
+            auto temp = ins++;
+            Entity *b = *temp;
+            b->x += b->dx;
+            b->y += b->dy;
+            // if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT){
+            //     player->health = 0;
+            //     b->health = 0;
+            //     delete b;
+            //     bullets.erase(temp);
+            // }
+        }
+    }
+
     void doLogic(Graphics *graphics, int *keyboard){
         doPlayer(keyboard);
         doEnemy();
         doKill();
+        doBullet();
     }
 
     void drawBackground(Graphics *graphics) {
@@ -143,12 +192,29 @@ struct Game{
         }
     }
 
-    void doDraw(Graphics *graphics){
-        // drawBackground(graphics);
-        graphics->renderTexture(player->texture, player->x, player->y);
+    void drawPlayer(Graphics *graphics){
+        if (player->health){
+            graphics->renderTexture(player->texture, player->x, player->y);
+        }
+    }
+
+    void drawEnemy(Graphics *graphics){
         for (auto &enemy : enemies){
             graphics->renderTexture(enemy->texture, enemy->x, enemy->y);
         }
+    }
+
+    void drawBullet(Graphics *graphics){
+        for (auto &bullet : bullets){
+            graphics->renderTexture(bullet->texture, bullet->x, bullet->y);
+        }
+    }
+
+    void doDraw(Graphics *graphics){
+        // drawBackground(graphics);
+        drawPlayer(graphics);
+        drawEnemy(graphics);
+        drawBullet(graphics);
     }
 
 };

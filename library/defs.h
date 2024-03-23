@@ -14,11 +14,22 @@
 #define PLAYER_IMG_SOURCE "./resources/player.png"
 #define ENEMY_IMG_SOURCE "./resources/enemy.png"
 #define BACKGROUND_IMG_SOURCE "./resources/ground0.png"
+#define BULLET_IMG_SOURCE "./resources/bullet.png"
 
 #define BACKGROUND_IMG_W 32
 #define BACKGROUND_IMG_H 32
 
 #define ENEMY_SPEED 1
 #define PLAYER_SPEED 4
+#define BULLET_SPEED 4
 
+#define ENEMY_SIDE 1
+#define PLAYER_SIDE 0
+
+#define PLAYER_INIT_X 100
+#define PLAYER_INIT_Y 100
+
+
+#define IN_RADIUS 10000
+#define PI 3.14159265
 #endif
