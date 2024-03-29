@@ -1,14 +1,16 @@
 #ifndef _GAME__H
 #define _GAME__H
 
-#include "entity.h"
-#include "SDL.h"
-#include "SDL_scancode.h"
-
 #include <list>
 #include <iostream>
 #include <chrono>
 #include <random>
+
+#include "entity.h"
+#include "utils.h"
+#include "defs.h"
+#include "SDL.h"
+#include "SDL_scancode.h"
 
 std::mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
@@ -24,8 +26,6 @@ T randFloat(T l, T r){
     return distribution(rng);
 }
 
-void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *src, int x, int y);
-void calcSlope(int x1, int y1, int x2, int y2, float *dx, float *dy);
 
 struct Game{
     Entity *player;
