@@ -24,8 +24,21 @@ T randFloat(T l, T r){
     return distribution(rng);
 }
 
-void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *src, int x, int y);
+void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *src, int x, int y);
 void calcSlope(int x1, int y1, int x2, int y2, float *dx, float *dy);
+
+// const int ASSASSIN_CLIPS[][4] = {
+//     {64, 0, 32, 32},
+//     {64, 32, 32, 32},
+//     {64, 64, 32, 32},
+//     {64, 96, 32, 32},
+//     {64, 128, 32, 32},
+//     {64, 160, 32, 32},
+//     {64, 192, 32, 32},
+//     {64, 224, 32, 32},
+//     {64, 256, 32, 32},
+//     {64, 288, 32, 32},
+// };
 
 struct Game{
     Entity *player;
@@ -49,7 +62,10 @@ struct Game{
         player->direction = RIGHT;
         player->side = PLAYER_SIDE;
         player->health = 1;
-        SDL_QueryTexture(player->texture, NULL, NULL, &player->w, &player->h);
+        player->sprite = new Sprite();
+        player->sprite->init(player->texture, ASSASSIN_FRAMES, ASSASSIN_CLIPS);
+        player->w = PLAYER_IMG_W;
+        player->h = PLAYER_IMG_H;
     }
 
     void initEnemy(){
@@ -115,6 +131,19 @@ struct Game{
             }
             enemy->x += enemy->dx * direction_x[enemy->direction];
             enemy->y += enemy->dy * direction_y[enemy->direction];
+            if (enemy->x < 0){
+                enemy->x = 0;
+            }
+            else if (enemy->x > SCREEN_WIDTH - enemy->w){
+                enemy->x = SCREEN_WIDTH - enemy->w;
+            }
+            if (enemy->y < 0){
+                enemy->y = 0;
+            }
+            else if (enemy->y > SCREEN_HEIGHT - enemy->h){
+                enemy->x = SCREEN_HEIGHT - enemy->h;
+            }
+
             --enemy->changeSide;
             if (enemy->changeSide == 0){
                 int prevDirection = enemy->direction;
@@ -193,8 +222,11 @@ struct Game{
     }
 
     void drawPlayer(Graphics *graphics){
+        
         if (player->health){
-            graphics->renderTexture(player->texture, player->x, player->y);
+            player->sprite->tick();
+            const SDL_Rect *rect = player->sprite->getCurrentClip();
+            blitRect(graphics->renderer, player->texture, rect, player->x, player->y);
         }
     }
 
@@ -211,7 +243,7 @@ struct Game{
     }
 
     void doDraw(Graphics *graphics){
-        // drawBackground(graphics);
+        drawBackground(graphics);
         drawPlayer(graphics);
         drawEnemy(graphics);
         drawBullet(graphics);

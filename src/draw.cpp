@@ -10,7 +10,7 @@ void presentScene(SDL_Renderer *renderer) {
     SDL_RenderPresent(renderer);
 }
 
-void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *src, int x, int y)
+void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *src, int x, int y)
 {
 	SDL_Rect dest;
 

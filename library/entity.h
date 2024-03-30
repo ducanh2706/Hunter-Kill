@@ -3,6 +3,7 @@
 
 #include "SDL.h"
 #include "defs.h"
+#include "graphics.h"
 
 enum Direction{
     UP = 0,
@@ -28,7 +29,7 @@ struct Entity{
     int reload;
 
     SDL_Texture *texture;
-
+    Sprite *sprite;
 
     Entity() {
         x = y = 0;

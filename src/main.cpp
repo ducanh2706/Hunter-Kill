@@ -40,6 +40,7 @@ int main(int argc, char** argv){
 
     long long then = SDL_GetTicks64();
     float remainder = 0;
+
     
     while (true){
         prepareScene(graphics.renderer);
