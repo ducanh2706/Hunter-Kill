@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -I/Library/Frameworks/SDL2.Framework/Headers -I/Library/Frameworks/SDL2_Image.Framework/Headers -F/Library/Frameworks -framework SDL2 -framework SDL2_Image
+CFLAGS = -I/Library/Frameworks/SDL2.Framework/Headers -I/Library/Frameworks/SDL2_Image.Framework/Headers -I/Library/Frameworks/SDL2_mixer.Framework/Headers -I/Library/Frameworks/SDL2_ttf.Framework/Headers -F/Library/Frameworks -framework SDL2 -framework SDL2_Image -framework SDL2_ttf -framework SDL2_mixer
 
 SRC_DIR = src
 BUILD_DIR = build

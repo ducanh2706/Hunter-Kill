@@ -8,7 +8,7 @@ struct Input {
     int keyboard[MAX_KEYBOARD_KEYS];
 
     void init() {
-        for (int i = 0; i < MAX_KEYBOARD_KEYS; i++){
+        for (int i = 0; i < MAX_KEYBOARD_KEYS; i++) {
             keyboard[i] = 0;
         }
     }
