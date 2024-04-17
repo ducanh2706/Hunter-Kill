@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include "../library/draw.h"
 
 void prepareScene(SDL_Renderer *renderer) {

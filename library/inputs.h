@@ -2,6 +2,7 @@
 #define _INPUT__H
 
 #include <SDL2/SDL.h>
+
 #include "defs.h"
 
 class Input {

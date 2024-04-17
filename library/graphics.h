@@ -1,9 +1,10 @@
 #ifndef _GRAPHICS__H
 #define _GRAPHICS__H
 
+#include <bits/stdc++.h>
 #include <SDL.h>
 #include <SDL_image.h>
-#include "defs.h"
+
 #include <bits/stdc++.h>
 
 struct Graphics {

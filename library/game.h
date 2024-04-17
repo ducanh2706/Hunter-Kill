@@ -1,16 +1,17 @@
 #ifndef _GAME__H
 #define _GAME__H
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 #include <list>
 #include <iostream>
 #include <chrono>
 #include <random>
 
+
 #include "entity.h"
 #include "utils.h"
 #include "defs.h"
-#include "SDL.h"
-#include "SDL_scancode.h"
 #include "random.h"
 #include "level.h"
 

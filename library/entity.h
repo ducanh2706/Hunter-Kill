@@ -1,13 +1,14 @@
 #ifndef _ENTITY__H
 #define _ENTITY__H
 
-#include "SDL.h"
+#include <SDL2/SDL.h>
+#include <math.h>
+
 #include "defs.h"
 #include "graphics.h"
 #include "texture.h"
 #include "vector.h"
-#include <math.h>
-#include <SDL2/SDL.h>
+
 
 class Entity{
 public:

@@ -1,3 +1,6 @@
+#ifndef _RANDOM__H
+#define _RANDOM__H
+
 #include <random>
 #include <chrono>
 
@@ -23,3 +26,5 @@ public:
         return distribution(rng);
     }
 };
+
+#endif

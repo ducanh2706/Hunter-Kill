@@ -2,6 +2,7 @@
 #define _LEVEL__H
 
 #include <vector>
+
 #include "entity.h"
 
 using std::vector;

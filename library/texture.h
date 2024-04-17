@@ -3,9 +3,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_Image/SDL_image.h>
-#include "vector.h"
 #include <string>
 #include <vector>
+
+#include "vector.h"
 #include "error.h"
 #include "defs.h"
 

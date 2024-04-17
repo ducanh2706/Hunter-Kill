@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
+
 #include "../library/graphics.h"
 #include "../library/defs.h"
 #include "../library/draw.h"
