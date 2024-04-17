@@ -4,7 +4,9 @@
 #include <SDL2/SDL.h>
 #include "defs.h"
 
-struct Input {
+class Input {
+public:
+    
     int keyboard[MAX_KEYBOARD_KEYS];
 
     void init() {

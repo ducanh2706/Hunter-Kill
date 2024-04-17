@@ -1,79 +1,46 @@
-// #include "../library/Entity.h"
+#include "../library/Entity.h"
 
-// Entity::Entity(SDL_Renderer *_renderer) : position(), velocity(), acceleration(), side(false), health(100), texture(_renderer) {}
 
-// const Vector& Entity::getPosition() const {
-//     return position;
-// }
+Entity::Entity() {
+        x = y = 0;
+        w = h = 0;
+        dx = dy = 0;
+        side = 0;
+        health = 1;
 
-// const Vector& Entity::getVelocity() const {
-//     return velocity;
-// }
+        texture = NULL;
+        rect = NULL;
+        sprite = NULL;
 
-// const Vector& Entity::getAcceleration() const {
-//     return acceleration;
-// }
+        changeSide = 120;
+        direction = RIGHT;
 
-// bool Entity::getSide() const {
-//     return side;
-// }
+}
 
-// int Entity::getHealth() const {
-//     return health;
-// }
+bool Entity::collide(const Entity *other) const {
+    return (std::max(x, other->x) < std::min(x + w, other->x + other->w)) && (std::max(y, other->y) < std::min(y + h, other->y + other->h));
+}
 
-// Texture Entity::getTexture() const {
-//     return texture;
-// }
+double Entity::distanceToOther(const Entity *other) const {
+    return sqrt((x - other->x) * (x - other->x) + (y - other->y) * (y - other->y));
+}
 
-// Sprite Entity::getSprite() const {
-//     return sprite;
-// }
+bool Enemy::inRange(const Entity *player) const {
+        /***
+         * LEFT: (radius, 3PI/4 to 5PI/4)
+         * RIGHT: (radius, 7PI/4 to PI/4)
+         * UP: (radius, 5PI/4 to 7PI/4)
+         * DOWN: (radius, PI/4 to 3PI/4)
+        */
 
-// Direction Entity::getDirection() const {
-//     return direction;
-// }
+        const double RANGE_LOWER_BOUND[4] = {5 * PI / 4, PI / 4, 3 * PI / 4, 7 * PI / 4};
+        const double RANGE_UPPER_BOUND[4] = {7 * PI / 4, 3 * PI / 4, 5 * PI / 4, PI / 4};
 
-// double Entity::getTextureWidth() const {
-//     return getTexture().getWidth();
-// }
+        float angle = atan2(player->y - y, player->x - x);
+        if (angle < 0) angle += 2 * PI;
 
-// double Entity::getTextureHeight() const {
-//     return getTexture().getHeight();
-// }
-
-// void Entity::setPosition(Vector _position) {
-//     position = _position;
-// }
-
-// void Entity::setVelocity(Vector _velocity) {
-//     velocity = _velocity;
-// }
-
-// void Entity::setAcceleration(Vector _acceleration) {
-//     acceleration = _acceleration;
-// }
-
-// void Entity::setSide(bool _side) {
-//     side = _side;
-// }
-
-// void Entity::setHealth(int _health) {
-//     health = _health;
-// }
-
-// void Entity::setTexture(Texture _texture) {
-//     texture = _texture;
-// }
-
-// void Entity::setSprite(Sprite _sprite) {
-//     sprite = _sprite;
-// }
-
-// void Entity::setDirection(Direction _direction) {
-//     direction = _direction;
-// }
-
-// bool Entity::collide(const Entity &other) const {
-//     return (std::max(position.getX(), other.position.getX()) < std::min(position.getX() + texture.getWidth(), other.position.getX() + other.texture.getWidth())) && (std::max(position.getY(), other.position.getY()) < std::min(position.getY() + texture.getHeight(), other.position.getY() + other.texture.getHeight()));
-// }
+        double distance = distanceToOther(player);
+        if (distance > radius) return false;
+        if (direction == RIGHT) return (0 <= angle && angle <= PI / 4) || (7 * PI / 4 <= angle && angle <= 2 * PI);
+        return RANGE_LOWER_BOUND[direction] <= angle && angle <= RANGE_UPPER_BOUND[direction];    
+}

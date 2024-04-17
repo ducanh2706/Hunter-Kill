@@ -17,8 +17,8 @@
 struct Game {
     Level level;
     Entity *player;
-    std::list<Entity*> enemies;
-    std::list<Entity*> bullets;
+    std::list<Enemy*> enemies;
+    std::list<Enemy*> bullets;
     RandomGenerator random;
 
     static const int ENEMIES_NUMBER = 1;
@@ -40,7 +40,7 @@ struct Game {
     void doPlayer(int* keyboard);
     void doEnemy();
     void doKill();
-    void fireBullet(Entity *enemy);
+    void fireBullet(Enemy *enemy);
     void doBullet();
     void doLogic(Graphics *graphics, int *keyboard);
 

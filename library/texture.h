@@ -5,7 +5,11 @@
 #include <SDL2_Image/SDL_image.h>
 #include "vector.h"
 #include <string>
+#include <vector>
 #include "error.h"
+#include "defs.h"
+
+using std::vector;
 
 class Texture {
 private:
@@ -25,5 +29,22 @@ public:
     int getHeight() const;
 
 };
+
+class Sprite {
+public:
+
+    SDL_Texture* texture;
+    std::vector<SDL_Rect> clips[4];
+    Direction direction;
+
+    int currentFrame = 0;
+    int counter = 0;
+
+    void init(SDL_Texture* _texture, int frames, int width, int height);
+    void tick(Direction _direction);
+    const SDL_Rect* getCurrentClip(Direction _direction) const;
+};
+
+
 
 #endif

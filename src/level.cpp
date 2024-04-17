@@ -22,14 +22,14 @@ Level::Level(int _level) {
     numMaps = 8;
     maps.resize(8);
     maps = {
-        Rectangle(2, 1, 12, 8),
-        Rectangle(13, 4, 19, 5),
-        Rectangle(20, 1, 22, 12),
-        Rectangle(7, 9, 10, 16),
-        Rectangle(2, 17, 10, 30),
-        Rectangle(7, 31, 10, 38),
-        Rectangle(11, 27, 17, 28),
-        Rectangle(18, 20, 22, 38)
+        Rectangle(1, 2, 8, 12),
+        Rectangle(4, 13, 5, 19),
+        Rectangle(1, 20, 12, 22),
+        Rectangle(9, 7, 16, 10),
+        Rectangle(17, 2, 30, 10),
+        Rectangle(31, 7, 38, 10),
+        Rectangle(27, 11, 28, 17),
+        Rectangle(20, 18, 38, 22)
     };
 
     numOfEnemies.resize(8);

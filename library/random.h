@@ -1,8 +1,11 @@
 #include <random>
 #include <chrono>
 
-struct RandomGenerator {
+class RandomGenerator {
+private:
     std::mt19937_64 rng;
+
+public:
 
     RandomGenerator() {
         rng.seed(std::chrono::steady_clock::now().time_since_epoch().count());

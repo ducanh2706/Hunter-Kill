@@ -4,12 +4,17 @@
 #include <math.h>
 #include <iostream>
 
+
 #define WINDOW_TITLE "Assassin Hunter"
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 760
 
+
+
 #define MAX_KEYBOARD_KEYS 350
 #define FPS 60
+
+#define TILE_SIZE 32
 
 #define MAP_SIZE_X 2000
 #define MAP_SIZE_Y 2000
@@ -65,6 +70,17 @@
 // };
 
 #define ASSASSIN_FRAMES 9
+
+enum Direction{
+    UP = 0,
+    LEFT = 1,
+    DOWN = 2,
+    RIGHT = 3,
+    UP_LEFT = 4,
+    UP_RIGHT = 5,
+    DOWN_LEFT = 6,
+    DOWN_RIGHT = 7
+};
 
 
 

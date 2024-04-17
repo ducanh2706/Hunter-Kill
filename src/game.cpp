@@ -26,22 +26,25 @@ void Game::initPlayer() {
 }
 
 void Game::initEnemy() {
-    for (int i = 1; i <= ENEMIES_NUMBER; i++) {
-        Entity *enemy = new Entity();
-        enemy->x = random.randInt(1, SCREEN_WIDTH);
-        enemy->y = random.randInt(1, SCREEN_HEIGHT);
-        enemy->dx = enemy->dy = ENEMY_SPEED;
-        enemy->w = ENEMY_IMG_W;
-        enemy->h = ENEMY_IMG_H;
-        enemy->texture = enemy_texture;
-        enemy->direction = RIGHT;
-        enemy->side = ENEMY_SIDE;
-        enemy->changeSide = FPS * 10;
-        enemy->health = 1;
-        enemy->radius = IN_RADIUS;
-
-        enemies.push_back(enemy); 
+    for (int i = 0; i < level.numMaps; i++) {
+        for (int j = 0; j < level.numOfEnemies[i]; j++) {
+            Enemy *enemy = new Enemy();
+            enemy->x = random.randInt((int)level.maps[i].x * TILE_SIZE, ((int)level.maps[i].u) * TILE_SIZE);
+            enemy->y = random.randInt((int)level.maps[i].y * TILE_SIZE, ((int)level.maps[i].v) * TILE_SIZE);
+            std::cout << enemy->x << " " << enemy->y << std::endl;
+            enemy->dx = enemy->dy = ENEMY_SPEED;
+            enemy->w = ENEMY_IMG_W;
+            enemy->h = ENEMY_IMG_H;
+            enemy->texture = enemy_texture;
+            enemy->direction = RIGHT;
+            enemy->side = ENEMY_SIDE;
+            enemy->changeSide = FPS * 10;
+            enemy->health = 1;
+            enemy->radius = IN_RADIUS;
+            enemies.push_back(enemy); 
+        }
     }
+
 }
 
 void Game::initBackground(Graphics *graphics) {
@@ -89,9 +92,17 @@ void Game::doPlayer(int* keyboard) {
 
 void Game::doEnemy() {
     for (auto &enemy : enemies) {
-        if (enemy->inRange(player) && --enemy->reload <= 0) {
-            fireBullet(enemy);
+        if (enemy->inRange(player)) {
+            if (enemy->reload <= 0){
+                fireBullet(enemy);
+            }
+            enemyChase();
+        
+        } else{
+            enemyWander();
         }
+
+
         enemy->x += enemy->dx * direction_x[enemy->direction];
         enemy->y += enemy->dy * direction_y[enemy->direction];
         if (enemy->x < 0) {
@@ -114,7 +125,7 @@ void Game::doEnemy() {
             while (enemy->direction == prevDirection) {
                 enemy->direction = (Direction)random.randInt(0, 3);
             }
-            enemy->changeSide = FPS * 10;
+            enemy->changeSide = FPS * 3;
         }
     }
 }
@@ -124,16 +135,21 @@ void Game::doKill() {
 
     while (ins != enemies.end()) {
         auto temp = ins++;
-        Entity *b = *temp;
+        Enemy *b = *temp;
         if (player->collide(b) && player->direction == b->direction) {
             delete b;
             enemies.erase(temp);
+            // Alert there is an enemy killed in the region
+            /*
+                1. Check where is that region
+                2. All of enemy gonna go to that region using A* algorithm
+            */
         }
     }
 }
 
-void Game::fireBullet(Entity *enemy) {
-    Entity *bullet = new Entity();
+void Game::fireBullet(Enemy *enemy) {
+    Enemy *bullet = new Enemy();
     bullet->x = enemy->x;
     bullet->y = enemy->y;
     bullet->side = ENEMY_SIDE;
@@ -157,15 +173,15 @@ void Game::doBullet() {
     
     while (ins != bullets.end()) {
         auto temp = ins++;
-        Entity *b = *temp;
+        Enemy *b = *temp;
         b->x += b->dx;
         b->y += b->dy;
-        // if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT) {
-        //     player->health = 0;
-        //     b->health = 0;
-        //     delete b;
-        //     bullets.erase(temp);
-        // }
+        if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT) {
+            player->health = 0;
+            b->health = 0;
+            delete b;
+            bullets.erase(temp);
+        }
     }
 }
 
@@ -193,7 +209,6 @@ void Game::drawPlayer(Graphics *graphics) {
         dest.y = player->y;
         dest.w = player->w;
         dest.h = player->h;
-        std::cout << dest.w << std::endl;
         SDL_RenderCopy(graphics->renderer, player->texture, srect, &dest);
     }
 }
@@ -224,5 +239,13 @@ void Game::doDraw(Graphics *graphics) {
 
 
 void Game::enemyWander() {
+
+}
+
+void Game::enemyChase() {
+
+}
+
+void Game::enemySeek() {
 
 }
