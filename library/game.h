@@ -14,13 +14,16 @@
 #include "defs.h"
 #include "random.h"
 #include "level.h"
+#include "bfs.h"
 
-struct Game {
+class Game {
+public:
     Level level;
     Entity *player;
     std::list<Enemy*> enemies;
     std::list<Enemy*> bullets;
     RandomGenerator random;
+    BFS bfs;
 
     static const int ENEMIES_NUMBER = 1;
     static constexpr int direction_x[4] = {0, 0, -1, 1};
@@ -51,9 +54,9 @@ struct Game {
     void drawBullet(Graphics *graphics);
     void doDraw(Graphics *graphics);
 
-    void enemySeek();
-    void enemyWander();
-    void enemyChase();
+    void enemySeek(Enemy *enemy);
+    void enemyWander(Enemy *enemy);
+    void enemyChase(Enemy *enemy);
 };
 
 #endif

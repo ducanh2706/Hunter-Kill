@@ -8,14 +8,17 @@
 #include "graphics.h"
 #include "texture.h"
 #include "vector.h"
+#include "rectangle.h"
+
+using std::pair;
+using std::vector;
 
 
 class Entity{
 public:
-
-    float x, y; // position of the entity.
+    double x, y; // position of the entity.
     int w, h; // texture size
-    float dx, dy; // vector of velocity
+    double dx, dy; // vector of velocity
     bool side;
     int health; /**** player: initial health. enemy: alive or killed ****/
 
@@ -30,6 +33,7 @@ public:
     Entity();
 
     bool collide(const Entity *other) const;
+    bool collide(const Rectangle &other) const;
     double distanceToOther(const Entity *other) const;
 };
 
@@ -39,6 +43,9 @@ public:
     int radius;
     int reload;
     int inRec;
+    bool isChasing;
+    int tSeek;
+    vector<pair<int, int>> path;
 
     bool inRange(const Entity *player) const;
 };

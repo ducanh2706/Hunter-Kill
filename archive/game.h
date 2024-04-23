@@ -150,7 +150,7 @@
 //         bullet->x += (enemy->w / 2) - (bullet->w / 2);
 //         bullet->y += (enemy->h / 2) - (bullet->h / 2);
 
-//         calcSlope(player->x + ((float)player->w / 2), player->y + ((float)player->h / 2), enemy->x, enemy->y, &bullet->dx, &bullet->dy);
+//         calcSlope(player->x + ((double)player->w / 2), player->y + ((double)player->h / 2), enemy->x, enemy->y, &bullet->dx, &bullet->dy);
 //         bullet->dx *= BULLET_SPEED;
 //         bullet->dy *= BULLET_SPEED;
 

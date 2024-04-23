@@ -11,14 +11,14 @@
 int main(int argc, char** argv) {
     Graphics graphics;
     Input input;
-    Game game;
+    Game game = Game();
 
     graphics.init();
     input.init();
     game.init(&graphics);
 
     long long then = SDL_GetTicks64();
-    float remainder = 0;
+    double remainder = 0;
 
     
     while (true) {

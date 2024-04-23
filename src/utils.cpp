@@ -3,7 +3,7 @@
 #include "../library/utils.h"
 #include "../library/defs.h"
 
-void calcSlope(float x1, float y1, float x2, float y2, float *dx, float *dy) {
+void calcSlope(double x1, double y1, double x2, double y2, double *dx, double *dy) {
 	double steps = std::max(std::abs(x1 - x2), std::abs(y1 - y2));
 
 	if (steps == 0)
@@ -30,7 +30,7 @@ void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *src,
 	SDL_RenderCopy(renderer, texture, src, &dest);
 }
 
-void capFrameRate(long long *then, float *remainder) {
+void capFrameRate(long long *then, double *remainder) {
 	long wait, frameTime;
 
 	wait = 16 + *remainder;
@@ -53,6 +53,6 @@ void capFrameRate(long long *then, float *remainder) {
 	*then = SDL_GetTicks();
 }
 
-bool outOfMap(float x, float y, int w, int h) {
+bool outOfMap(double x, double y, int w, int h) {
 	return x < 0 || y < 0 || x + w > SCREEN_WIDTH || y + h > SCREEN_HEIGHT;
 }

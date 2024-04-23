@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include <bits/stdc++.h>
+#include "defs.h"
 
 struct Graphics {
     SDL_Renderer *renderer;

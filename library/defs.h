@@ -21,7 +21,7 @@
 
 #define PLAYER_IMG_SOURCE "./resources/FBI_walk_cycle.png"
 #define ENEMY_IMG_SOURCE "./resources/Opponent.png"
-#define BACKGROUND_IMG_SOURCE "./resources/EasyMap.png"
+#define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 
 #define BACKGROUND_IMG_W 64
@@ -36,7 +36,7 @@
 #define ENEMY_IMG_H 32
 
 #define ENEMY_SPEED 1
-#define PLAYER_SPEED 1
+#define PLAYER_SPEED 4
 #define BULLET_SPEED 20
 
 #define ENEMY_SIDE 1
@@ -54,20 +54,6 @@
 #define PI acos(-1)
 
 #define ASSASSIN_SPRITE_FILE = "./resources/Assassin.png"
-
-// #define ASSASSIN_FRAMES 10
-// const int ASSASSIN_CLIPS[10][4] = {
-//     {0, 64, 32, 32},
-//     {32, 64, 32, 32},
-//     {64, 64, 32, 32},
-//     {96, 64, 32, 32},
-//     {128, 64, 32, 32},
-//     {160, 64, 32, 32},
-//     {192, 64, 32, 32},
-//     {224, 64, 32, 32},
-//     {256, 64, 32, 32},
-//     {288, 64, 32, 32},
-// };
 
 #define ASSASSIN_FRAMES 9
 

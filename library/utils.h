@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 
-void capFrameRate(long long *then, float *remainder);
-void calcSlope(float x1, float y1, float x2, float y2, float *dx, float *dy);
+void capFrameRate(long long *then, double *remainder);
+void calcSlope(double x1, double y1, double x2, double y2, double *dx, double *dy);
 void blitRect(SDL_Renderer *renderer, SDL_Texture *texture, const SDL_Rect *src, int x, int y);
-bool outOfMap(float x, float y, int w, int h);
+bool outOfMap(double x, double y, int w, int h);
 #endif

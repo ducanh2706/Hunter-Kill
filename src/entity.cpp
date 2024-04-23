@@ -20,6 +20,10 @@ bool Entity::collide(const Entity *other) const {
     return (std::max(x, other->x) < std::min(x + w, other->x + other->w)) && (std::max(y, other->y) < std::min(y + h, other->y + other->h));
 }
 
+bool Entity::collide(const Rectangle &other) const {
+    return (std::max(x, other.x * TILE_SIZE) < std::min(x + w, other.u * TILE_SIZE)) && (std::max(y, (other.y + 1) * TILE_SIZE) < std::min(y + h, (other.v + 1) * TILE_SIZE));
+}
+
 double Entity::distanceToOther(const Entity *other) const {
     return sqrt((x - other->x) * (x - other->x) + (y - other->y) * (y - other->y));
 }
@@ -35,7 +39,7 @@ bool Enemy::inRange(const Entity *player) const {
         const double RANGE_LOWER_BOUND[4] = {5 * PI / 4, PI / 4, 3 * PI / 4, 7 * PI / 4};
         const double RANGE_UPPER_BOUND[4] = {7 * PI / 4, 3 * PI / 4, 5 * PI / 4, PI / 4};
 
-        float angle = atan2(player->y - y, player->x - x);
+        double angle = atan2(player->y - y, player->x - x);
         if (angle < 0) angle += 2 * PI;
 
         double distance = distanceToOther(player);
