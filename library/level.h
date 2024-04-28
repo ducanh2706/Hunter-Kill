@@ -5,9 +5,10 @@
 #include <list>
 
 #include "entity.h"
-#include "rectangle.h"
+#include "Maths/rectangle.h"
 
 using std::vector;
+using std::list;
 
 class Level {
 public:

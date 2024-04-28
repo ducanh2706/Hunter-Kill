@@ -1,23 +1,5 @@
 #include "../library/level.h"
 
-
-Rectangle::Rectangle() {
-    x = y = u = v = w = h = 0;
-}
-
-Rectangle::Rectangle(double _x, double _y, double _u, double _v) {
-    x = _x;
-    y = _y;
-    u = _u;
-    v = _v;
-    w = u - x;
-    h = v - y;
-}
-
-bool Rectangle::inMap(double _x, double _y) const {
-    return x <= _x && _x <= u && y <= _y && _y <= v;
-}
-
 Level::Level(int _level) {
     numMaps = 8;
     maps.resize(8);
@@ -33,7 +15,8 @@ Level::Level(int _level) {
     };
 
     numOfEnemies.resize(8);
-    numOfEnemies = {2, 2, 2, 2, 2, 2, 2, 2};
+    // numOfEnemies = {2, 2, 2, 2, 2, 2, 2, 2};
+    numOfEnemies = {1, 0, 0, 0, 0, 0, 0, 0};
 
     obstacles.resize(66);
 
@@ -127,3 +110,4 @@ Level::Level(int _numMaps, vector<Rectangle> _maps, vector<Rectangle> _obstacles
     numOfEnemies = _numOfEnemies;
     enemyShootingRange = _enemyShootingRange;
 }
+

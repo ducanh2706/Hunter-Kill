@@ -12,9 +12,19 @@
 #include "entity.h"
 #include "utils.h"
 #include "defs.h"
-#include "random.h"
 #include "level.h"
-#include "bfs.h"
+#include "Maths/random.h"
+#include "Maths/vector2.h"
+
+#include "AI/context.solver.h"
+#include "AI/obstacle.avoidance.h"
+#include "AI/obstacle.detector.h"
+#include "AI/target.detector.h"
+#include "AI/target.seek.h"
+
+using std::cout;
+using std::endl;
+
 
 class Game {
 public:
@@ -23,7 +33,6 @@ public:
     std::list<Enemy*> enemies;
     std::list<Enemy*> bullets;
     RandomGenerator random;
-    BFS bfs;
 
     static const int ENEMIES_NUMBER = 1;
     static constexpr int direction_x[4] = {0, 0, -1, 1};

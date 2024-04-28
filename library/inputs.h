@@ -7,7 +7,6 @@
 
 class Input {
 public:
-    
     int keyboard[MAX_KEYBOARD_KEYS];
 
     void init() {

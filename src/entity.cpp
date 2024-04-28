@@ -9,10 +9,9 @@ Entity::Entity() {
 
         texture = NULL;
         rect = NULL;
-        sprite = NULL;
 
         changeSide = 120;
-        direction = RIGHT;
+        // direction = RIGHT;
 
 }
 
@@ -35,15 +34,16 @@ bool Enemy::inRange(const Entity *player) const {
          * UP: (radius, 5PI/4 to 7PI/4)
          * DOWN: (radius, PI/4 to 3PI/4)
         */
+       return true;
 
-        const double RANGE_LOWER_BOUND[4] = {5 * PI / 4, PI / 4, 3 * PI / 4, 7 * PI / 4};
-        const double RANGE_UPPER_BOUND[4] = {7 * PI / 4, 3 * PI / 4, 5 * PI / 4, PI / 4};
+        // const double RANGE_LOWER_BOUND[4] = {5 * PI / 4, PI / 4, 3 * PI / 4, 7 * PI / 4};
+        // const double RANGE_UPPER_BOUND[4] = {7 * PI / 4, 3 * PI / 4, 5 * PI / 4, PI / 4};
 
-        double angle = atan2(player->y - y, player->x - x);
-        if (angle < 0) angle += 2 * PI;
+        // double angle = atan2(player->y - y, player->x - x);
+        // if (angle < 0) angle += 2 * PI;
 
-        double distance = distanceToOther(player);
-        if (distance > radius) return false;
-        if (direction == RIGHT) return (0 <= angle && angle <= PI / 4) || (7 * PI / 4 <= angle && angle <= 2 * PI);
-        return RANGE_LOWER_BOUND[direction] <= angle && angle <= RANGE_UPPER_BOUND[direction];    
+        // double distance = distanceToOther(player);
+        // if (distance > radius) return false;
+        // if (direction == RIGHT) return (0 <= angle && angle <= PI / 4) || (7 * PI / 4 <= angle && angle <= 2 * PI);
+        // return RANGE_LOWER_BOUND[direction] <= angle && angle <= RANGE_UPPER_BOUND[direction];    
 }

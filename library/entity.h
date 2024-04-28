@@ -6,9 +6,13 @@
 
 #include "defs.h"
 #include "graphics.h"
-#include "texture.h"
-#include "vector.h"
-#include "rectangle.h"
+#include "Maths/rectangle.h"
+#include "Maths/vector2.h"
+#include "AI/context.solver.h"
+#include "AI/obstacle.avoidance.h"
+#include "AI/Obstacle.detector.h"
+#include "AI/target.detector.h"
+#include "AI/target.seek.h"
 
 using std::pair;
 using std::vector;
@@ -23,12 +27,11 @@ public:
     int health; /**** player: initial health. enemy: alive or killed ****/
 
     int changeSide;
-    Direction direction;
+    // Direction direction;
 
 
     SDL_Rect *rect;
     SDL_Texture *texture;
-    Sprite *sprite;
 
     Entity();
 
@@ -46,6 +49,11 @@ public:
     bool isChasing;
     int tSeek;
     vector<pair<int, int>> path;
+    ContextSolver solver;
+    ObstacleAvoidance obstacleAvoidance;
+    ObstacleDetector obstacleDetector;
+    TargetDetector targetDetector;
+    SeekBehavior targetSeek;
 
     bool inRange(const Entity *player) const;
 };

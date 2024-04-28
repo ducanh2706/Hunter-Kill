@@ -19,7 +19,7 @@
 #define MAP_SIZE_X 2000
 #define MAP_SIZE_Y 2000
 
-#define PLAYER_IMG_SOURCE "./resources/FBI_walk_cycle.png"
+#define PLAYER_IMG_SOURCE "./resources/Gunner.png"
 #define ENEMY_IMG_SOURCE "./resources/Opponent.png"
 #define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
@@ -50,23 +50,24 @@
 #define BULLET_HEALTH 1
 
 
-#define IN_RADIUS 10000
+#define IN_RADIUS 5
+#define FIND_RADIUS 10
 #define PI acos(-1)
 
 #define ASSASSIN_SPRITE_FILE = "./resources/Assassin.png"
 
 #define ASSASSIN_FRAMES 9
 
-enum Direction{
-    UP = 0,
-    LEFT = 1,
-    DOWN = 2,
-    RIGHT = 3,
-    UP_LEFT = 4,
-    UP_RIGHT = 5,
-    DOWN_LEFT = 6,
-    DOWN_RIGHT = 7
-};
+// enum Direction{
+//     UP = 0,
+//     LEFT = 1,
+//     DOWN = 2,
+//     RIGHT = 3,
+//     UP_LEFT = 4,
+//     UP_RIGHT = 5,
+//     DOWN_LEFT = 6,
+//     DOWN_RIGHT = 7
+// };
 
 
 
