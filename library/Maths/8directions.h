@@ -2,15 +2,14 @@
 #define _DIRECTION__H
 
 #include <vector>
-#include "Maths/vector2.h"
+#include "vector2.h"
 
 using std::vector;
 
-class Direction {
+class EightDirections {
 public:
-    static vector<Vector2> directions;
-    
-    Direction() {
+    static std::vector<Vector2> directions() {
+        std::vector<Vector2> directions;
         directions.push_back(Vector2(0, -1).normalize());
         directions.push_back(Vector2(0, 1).normalize());
         directions.push_back(Vector2(-1, 0).normalize());
@@ -19,6 +18,7 @@ public:
         directions.push_back(Vector2(-1, -1).normalize());
         directions.push_back(Vector2(1, -1).normalize());
         directions.push_back(Vector2(-1, 1).normalize());
+        return directions;
     }
 };
 
