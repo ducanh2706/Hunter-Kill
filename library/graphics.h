@@ -112,7 +112,6 @@ struct Graphics {
     SDL_Texture* renderText(const char* text, 
                             TTF_Font* font, SDL_Color textColor)
     {
-        // cout << "?" << endl;
         SDL_Surface* textSurface = 
                 TTF_RenderText_Solid( font, text, textColor );
         if( textSurface == nullptr ) {

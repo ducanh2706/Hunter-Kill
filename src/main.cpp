@@ -49,7 +49,6 @@ int main(int argc, char** argv) {
     game.init(&graphics);
         
     MainWindow mainWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hunter-Kill");
-    cout << &mainWindow.gRenderer << endl;
 
     Menu menu(mainWindow);
     menu.init();

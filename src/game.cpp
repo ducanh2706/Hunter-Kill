@@ -98,7 +98,6 @@ void Game::doPlayer(int* keyboard) {
     }
 
     for (auto &obstacle : level.obstacles) {
-        // std::cout << obstacle.x << " " << obstacle.y << " " << obstacle.u << " " << obstacle.v << " " << obstacle.w << " " << obstacle.h << std::endl;
         if (player->collide(obstacle)) {
             player->x = prev_x;
             player->y = prev_y;
@@ -285,32 +284,16 @@ void Game::enemySeek(Enemy *enemy) {
     obstacleDetector.detect(level.obstacles, Vector2(enemy->x, enemy->y), detectedObstacles);
 
 
-    // cout << "Enemy position: " << enemy->x << " " << enemy->y << endl;
-
-    // for (auto &v : detectedObstacles) {
-    //     cout << "Detected obstacle: " << v.x << " " << v.y << " " << v.u << " " << v.v << endl;
-    // }
-    
-    // cout << endl;
-
     bool targetDetected = targetDetector.detect(level.obstacles, Vector2(enemy->x, enemy->y), Vector2(player->x, player->y));
     
     obstacleAvoidance.getSteering(danger, interest, Vector2(enemy->x, enemy->y), detectedObstacles);
 
-    cout << "Target detected: " << std::boolalpha << targetDetected << endl;
-    cout << "Danger: ";
-    for (auto v : danger) cout << v << " ";
-    cout << endl;
     targetSeek.getSteering(danger, interest, detectedObstacles, Vector2(enemy->x, enemy->y), Vector2(player->x, player->y), targetDetected);
-    cout << "Interest: ";
-    for (auto v : interest) cout << v << " ";
-    cout << endl;
     Vector2 direction = solver.GetDirectionToMove(danger, interest);
 
     enemy->x += direction.x;
     enemy->y += direction.y;
 
-    cout << direction.x << " " << direction.y << " " << enemy->x << " " << enemy->y << endl;
     if (enemy->x == 0 && enemy->y == 0){
         exit(0);
     }

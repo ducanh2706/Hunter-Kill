@@ -152,7 +152,6 @@ void Menu::render(State &state){
     int idx = 1;
 
     if (state.menuState == MenuState::SETTINGS){
-        cout << useMusic << " " << useSFX << endl;
         if (useMusic) vGreen.render(50, 100);
         else xGreen.render(50, 100);
 

@@ -104,7 +104,6 @@ void Texture::loadFromFile( const std::string& path )
 
 void Texture::loadFromRenderedText( const std::string& textureText, Font& f, SDL_Color textColor )
 {
-    cout << "? " << endl;
     free();
 
     SDL_Surface* textSurface = TTF_RenderText_Solid( f.getFont(), textureText.c_str(), textColor );
@@ -119,7 +118,6 @@ void Texture::loadFromRenderedText( const std::string& textureText, Font& f, SDL
 
     mWidth = textSurface->w;
     mHeight = textSurface->h;
-    cout << mWidth << " " << mHeight << endl;
 
     SDL_FreeSurface( textSurface );
 }
