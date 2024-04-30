@@ -13,6 +13,8 @@
 #include "utils.h"
 #include "defs.h"
 #include "level.h"
+#include "mainwindow.h"
+#include "texture.h"
 #include "Maths/random.h"
 #include "Maths/vector2.h"
 
@@ -28,6 +30,7 @@ using std::endl;
 
 class Game {
 public:
+    const MainWindow &mainWindow;
     Level level;
     Entity *player;
     std::list<Enemy*> enemies;
@@ -38,30 +41,34 @@ public:
     static constexpr int direction_x[4] = {0, 0, -1, 1};
     static constexpr int direction_y[4] = {-1, 1, 0, 0};
 
-    SDL_Texture *player_texture, *enemy_texture;
-    SDL_Texture *background_texture;
-    SDL_Texture *bullet_texture;
+    // SDL_Texture *player_texture, *enemy_texture;
+    // SDL_Texture *background_texture;
+    // SDL_Texture *bullet_texture;
 
-    Game();
+
+    Texture playerTexture, enemyTexture, backgroundTexture, bulletTexture;
+
+
+    Game(const MainWindow &_mainWindow);
 
     void initPlayer();
     void initEnemy();
-    void initBackground(Graphics *graphics);
-    void initTexture(Graphics *graphics);
-    void init(Graphics *graphics);
+    void initBackground();
+    void initTexture();
+    void init();
 
     void doPlayer(int* keyboard);
     void doEnemy();
     void doKill();
     void fireBullet(Enemy *enemy);
     void doBullet();
-    void doLogic(Graphics *graphics, int *keyboard);
+    void doLogic(int *keyboard);
 
-    void drawBackground(Graphics *graphics);
-    void drawPlayer(Graphics *graphics);
-    void drawEnemy(Graphics *graphics);
-    void drawBullet(Graphics *graphics);
-    void doDraw(Graphics *graphics);
+    void drawBackground();
+    void drawPlayer();
+    void drawEnemy();
+    void drawBullet();
+    void doDraw();
 
     void enemySeek(Enemy *enemy);
     void enemyWander(Enemy *enemy);

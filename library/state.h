@@ -36,13 +36,7 @@ public:
     GeneralState generalState;
     GameState gameState;
 
-    State(MenuState _menuState, LevelState _levelState, SettingState _settingState, GeneralState _generalState, GameState _gameState):
-        menuState(_menuState),
-        levelState(_levelState),
-        settingState(_settingState),
-        generalState(_generalState),
-        gameState(_gameState)
-    {}
+    State(): menuState(MenuState::GENERAL), levelState(LevelState::EASY), settingState(SettingState::MUSIC), generalState(GeneralState::START), gameState(GameState::MENU) {}
 };
 
 #endif

@@ -6,6 +6,7 @@
 
 #include "defs.h"
 #include "graphics.h"
+#include "texture.h"
 #include "Maths/rectangle.h"
 #include "Maths/vector2.h"
 #include "AI/context.solver.h"
@@ -31,7 +32,8 @@ public:
 
 
     SDL_Rect *rect;
-    SDL_Texture *texture;
+    // SDL_Texture *texture;
+    Texture *texture;
 
     Entity();
 

@@ -159,3 +159,7 @@ void Texture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
 
     SDL_RenderCopyEx( gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
 }
+
+void Texture::blit(SDL_Rect* dst) {
+    SDL_RenderCopy(gRenderer, mTexture, NULL, dst);
+}

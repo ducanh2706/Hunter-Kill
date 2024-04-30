@@ -1,8 +1,13 @@
 #include "../library/game.h"
 
-Game::Game(): level(1) {
-
-}
+Game::Game(const MainWindow &_mainWindow): 
+    level(1), 
+    mainWindow(_mainWindow),
+    playerTexture{_mainWindow.getRenderer()},
+    enemyTexture{_mainWindow.getRenderer()},
+    backgroundTexture{_mainWindow.getRenderer()},
+    bulletTexture{_mainWindow.getRenderer()}
+    {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////// SECTION: INIT ///////////////////////////////////////////////////////////////////////////////////////
@@ -14,8 +19,7 @@ void Game::initPlayer() {
     player->w = PLAYER_IMG_W;
     player->h = PLAYER_IMG_H;
     player->dx = player->dy = PLAYER_SPEED;
-    player->texture = player_texture;
-    // player->direction = RIGHT;
+    player->texture = &playerTexture;
     player->side = PLAYER_SIDE;
     player->health = PLAYER_INITIAL_HEALTH;
     player->w = PLAYER_IMG_W;
@@ -31,8 +35,7 @@ void Game::initEnemy() {
             enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->w = ENEMY_IMG_W;
             enemy->h = ENEMY_IMG_H;
-            enemy->texture = enemy_texture;
-            // enemy->direction = RIGHT;
+            enemy->texture = &enemyTexture;
             enemy->side = ENEMY_SIDE;
             enemy->changeSide = FPS * 3;
             enemy->health = 1;
@@ -52,21 +55,26 @@ void Game::initEnemy() {
     }
 }
 
-void Game::initBackground(Graphics *graphics) {
+void Game::initBackground() {
 
 }
 
 
-void Game::initTexture(Graphics *graphics) {
-    player_texture = graphics->loadTexture(PLAYER_IMG_SOURCE);
-    enemy_texture = graphics->loadTexture(ENEMY_IMG_SOURCE);
-    background_texture = graphics->loadTexture(BACKGROUND_IMG_SOURCE);
-    bullet_texture = graphics->loadTexture(BULLET_IMG_SOURCE);
+void Game::initTexture() {
+    // player_texture = graphics->loadTexture(PLAYER_IMG_SOURCE);
+    // enemy_texture = graphics->loadTexture(ENEMY_IMG_SOURCE);
+    // background_texture = graphics->loadTexture(BACKGROUND_IMG_SOURCE);
+    // bullet_texture = graphics->loadTexture(BULLET_IMG_SOURCE);
+
+    playerTexture.loadFromFile(PLAYER_IMG_SOURCE);
+    enemyTexture.loadFromFile(ENEMY_IMG_SOURCE);
+    backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
+    bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
 }
 
-void Game::init(Graphics *graphics) {
-    initTexture(graphics);
-    initBackground(graphics);
+void Game::init() {
+    initTexture();
+    initBackground();
     initPlayer();
     initEnemy();
 }
@@ -170,11 +178,10 @@ void Game::fireBullet(Enemy *enemy) {
     bullet->x = enemy->x;
     bullet->y = enemy->y;
     bullet->side = ENEMY_SIDE;
-    bullet->texture = bullet_texture;
+    bullet->texture = &bulletTexture;
     bullet->health = BULLET_HEALTH;
     bullets.push_back(bullet);
 
-    SDL_QueryTexture(bullet->texture, NULL, NULL, &bullet->w, &bullet->h);
     bullet->x += (enemy->w / 2) - (bullet->w / 2);
     bullet->y += (enemy->h / 2) - (bullet->h / 2);
 
@@ -202,7 +209,7 @@ void Game::doBullet() {
     }
 }
 
-void Game::doLogic(Graphics *graphics, int *keyboard) {
+void Game::doLogic(int *keyboard) {
     doPlayer(keyboard);
     doEnemy();
     doKill();
@@ -212,11 +219,12 @@ void Game::doLogic(Graphics *graphics, int *keyboard) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////// SECTION: DRAW ///////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Game::drawBackground(Graphics *graphics) {
-    graphics->renderTexture(background_texture, 0, 0);
+void Game::drawBackground() {
+    cout << "? " << backgroundTexture.gRenderer << endl;
+    backgroundTexture.render(0, 0);
 }
 
-void Game::drawPlayer(Graphics *graphics) {
+void Game::drawPlayer() {
     
     if (player->health) {
         // player->sprite->tick(player->direction);
@@ -233,32 +241,32 @@ void Game::drawPlayer(Graphics *graphics) {
         dest.y = player->y;
         dest.w = ENEMY_IMG_W;
         dest.h = ENEMY_IMG_H;
-        SDL_RenderCopy(graphics->renderer, player->texture, NULL, &dest);
+        player->texture->blit(&dest);
     }
 }
 
-void Game::drawEnemy(Graphics *graphics) {
+void Game::drawEnemy() {
     for (auto &enemy : enemies) {
         SDL_Rect dest;
         dest.x = enemy->x;
         dest.y = enemy->y;
         dest.w = ENEMY_IMG_W;
         dest.h = ENEMY_IMG_H;
-        SDL_RenderCopy(graphics->renderer, enemy->texture, NULL, &dest);
+        enemy->texture->blit(&dest);
     }
 }
 
-void Game::drawBullet(Graphics *graphics) {
+void Game::drawBullet() {
     for (auto &bullet : bullets) {
-        graphics->renderTexture(bullet->texture, bullet->x, bullet->y);
+        bullet->texture->render(bullet->x, bullet->y);
     }
 }
 
-void Game::doDraw(Graphics *graphics) {
-    drawBackground(graphics);
-    drawPlayer(graphics);
-    drawEnemy(graphics);
-    drawBullet(graphics);
+void Game::doDraw() {
+    drawBackground();
+    drawPlayer();
+    drawEnemy();
+    drawBullet();
 }
 
 
