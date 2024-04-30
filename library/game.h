@@ -15,6 +15,8 @@
 #include "level.h"
 #include "mainwindow.h"
 #include "texture.h"
+#include "font.h"
+
 #include "Maths/random.h"
 #include "Maths/vector2.h"
 
@@ -36,6 +38,8 @@ public:
     std::list<Enemy*> enemies;
     std::list<Enemy*> bullets;
     RandomGenerator random;
+    Font mFont;
+    int killedEnemies = 0;
 
     static const int ENEMIES_NUMBER = 1;
     static constexpr int direction_x[4] = {0, 0, -1, 1};
@@ -51,6 +55,7 @@ public:
 
     Game(const MainWindow &_mainWindow);
 
+    void initFont();
     void initPlayer();
     void initEnemy();
     void initBackground();
@@ -64,6 +69,7 @@ public:
     void doBullet();
     void doLogic(int *keyboard);
 
+    void drawScoreboard();
     void drawBackground();
     void drawPlayer();
     void drawEnemy();

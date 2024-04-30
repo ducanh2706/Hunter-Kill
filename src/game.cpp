@@ -72,7 +72,12 @@ void Game::initTexture() {
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
 }
 
+void Game::initFont() {
+    mFont.load(FONT_PATH, SMALL_FONT);
+}
+
 void Game::init() {
+    initFont();
     initTexture();
     initBackground();
     initPlayer();
@@ -220,7 +225,6 @@ void Game::doLogic(int *keyboard) {
 ///////// SECTION: DRAW ///////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Game::drawBackground() {
-    cout << "? " << backgroundTexture.gRenderer << endl;
     backgroundTexture.render(0, 0);
 }
 
@@ -262,8 +266,16 @@ void Game::drawBullet() {
     }
 }
 
+void Game::drawScoreboard() {
+    Texture scoreboard(mainWindow.getRenderer());
+    
+    scoreboard.loadFromRenderedText("Score: " + std::to_string(killedEnemies), mFont, {0, 0, 0});
+    scoreboard.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 0);
+}
+
 void Game::doDraw() {
     drawBackground();
+    drawScoreboard();
     drawPlayer();
     drawEnemy();
     drawBullet();

@@ -21,7 +21,7 @@ void menuLogic(MainWindow &mainWindow, Input &input, Menu &menu, State &state, l
 
         mainWindow.update();
         
-        SDL_Delay(100);
+        SDL_Delay(70);
     }
 
     SDL_Delay(2000);
@@ -59,9 +59,6 @@ int main(int argc, char** argv) {
     long long then = SDL_GetTicks64();
     double remainder = 0;
     
-
-    // gameLogic(graphics, mainWindow, input, game, then, remainder); 
-
     while (true) {
         if (state.gameState == GameState::MENU)
             menuLogic(mainWindow, input, menu, state, then, remainder);
