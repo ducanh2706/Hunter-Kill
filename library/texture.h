@@ -10,8 +10,8 @@ class Texture {
 public:
     Texture(SDL_Renderer* renderer);
     ~Texture();
-    Texture(const Texture&) = delete;
-    Texture& operator=(const Texture&) = delete;
+    Texture(const Texture& other) = delete;
+    Texture& operator=(const Texture& other) = delete;
 
     void loadFromFile( const std::string& path );
     void loadFromRenderedText(const std::string& textureText, Font& f, SDL_Color textColor );
@@ -23,7 +23,7 @@ public:
     int getWidth() const {return mWidth; }
     int getHeight() const {return mHeight;}
 
-private:
+public:
     SDL_Texture* mTexture;
     SDL_Renderer* gRenderer;
 

@@ -11,7 +11,7 @@
 
 #define FONT_PATH "./fonts/EnterCommand.ttf"
 #define BIG_FONT 100
-#define SMALL_FONT 20
+#define SMALL_FONT 60
 
 
 #define MAX_KEYBOARD_KEYS 350

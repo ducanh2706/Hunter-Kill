@@ -77,7 +77,7 @@ void MainWindow::setIcon(const string& path)
 
 void MainWindow::clear() const
 {
-    SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
     SDL_RenderClear( gRenderer );
 }
 
