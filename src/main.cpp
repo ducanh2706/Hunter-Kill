@@ -7,6 +7,7 @@
 #include "../library/inputs.h"
 #include "../library/game.h"
 #include "../library/utils.h"
+#include "../library/menu.h"
 
 enum MenuState {
     GENERAL,
@@ -72,37 +73,67 @@ enum GameState {
 // }
 
 
-// void menuLogic(Graphics &graphics, Input &input, Game &game, long long &then, double &remainder, GameState &gameState, MenuState &menuState) {
-//     if (menuState == MenuState::GENERAL){
-//         menuGeneralLogic(graphics, input, game, then, remainder, gameState, menuState);
-//     } else if (menuState == MenuState::CHOOSE_LEVEL){
-//         menuGeneralChooseLevel(graphics, input, game, then, remainder, gameState, menuState);
-//     } else if (menuState == MenuState::SETTINGS){
-//         menuGeneralSettings(graphics, input, game, then, remainder,gameState, menuState);
-//     } else if (menuState == MenuState::QUIT){
-//         gameState = GameState::QUIT;
-//     } else{
+void menuLogic(Graphics &graphics, MainWindow &mainWindow, Input &input, Game &game, long long &then, double &remainder, Menu &menu,  GameState &gameState, MenuState &menuState) {
+    // if (menuState == MenuState::GENERAL){
+    //     menuGeneralLogic(graphics, input, game, then, remainder, gameState, menuState);
+    // } else if (menuState == MenuState::CHOOSE_LEVEL){
+    //     menuGeneralChooseLevel(graphics, input, game, then, remainder, gameState, menuState);
+    // } else if (menuState == MenuState::SETTINGS){
+    //     menuGeneralSettings(graphics, input, game, then, remainder,gameState, menuState);
+    // } else if (menuState == MenuState::QUIT){
+    //     gameState = GameState::QUIT;
+    // } else{
         
-//     } else if (menuState == MenuState::CHOOSE_LEVEL){
+    // } else if (menuState == MenuState::CHOOSE_LEVEL){
 
-//     } else if (menuState == MenuState::SETTINGS){
+    // } else if (menuState == MenuState::SETTINGS){
 
-//     } else if (menuState == MenuState::QUIT){
-//         gameState = GameState::QUIT;
-//     } else{
+    // } else if (menuState == MenuState::QUIT){
+    //     gameState = GameState::QUIT;
+    // } else{
 
-//     }
+    // }
+    // while (true){
+    //     cout << "Hello" << endl;
+    //     input.get();
+    //     graphics.prepareScene();
+    //     // prepareScene(graphics.renderer);
+    //     // prepareScene(graphics.renderer);
+    //     menu.render(graphics);
+    //     // presentScene(graphics.renderer);
+    //     // presentScene(graphics.renderer);
+    //     graphics.presentScene();
+    //     SDL_Delay(100);
+    // }
 
-// }
+
+    // graphics.prepareScene();
+
+    mainWindow.clear();
+
+    menu.render(graphics);
+
+    mainWindow.update();
+
+    // graphics.presentScene();
+    while (true){
+        input.get();
+        SDL_Delay(100);
+    }
+
+}
 
 void gameLogic(Graphics &graphics, Input &input, Game &game, long long &then, double &remainder) {
-    prepareScene(graphics.renderer);
-    input.get();
-    game.doLogic(&graphics, input.keyboard);
-    game.doDraw(&graphics);
 
-    presentScene(graphics.renderer);
-    capFrameRate(&then, &remainder);
+    while (true){
+        prepareScene(graphics.renderer);
+        input.get();
+        game.doLogic(&graphics, input.keyboard);
+        game.doDraw(&graphics);
+
+        presentScene(graphics.renderer);
+        capFrameRate(&then, &remainder);
+    }
 }
 
 int main(int argc, char** argv) {
@@ -110,24 +141,31 @@ int main(int argc, char** argv) {
     Input input;
     Game game = Game();
 
-    GameState gameState = GameState::PLAYING;
 
     graphics.init();
     input.init();
     game.init(&graphics);
+        
+    MainWindow mainWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hunter-Kill");
+
+    Menu menu(mainWindow);
+    menu.init(graphics);
+
+    GameState gameState = GameState::MENU;
+    MenuState menuState = MenuState::GENERAL;
 
     long long then = SDL_GetTicks64();
     double remainder = 0;
-
     
+
     while (true) {
-        if (gameState == GameState::MENU) {
-            // menuLogic(graphics, input, game, then, remainder);
-        } else if (gameState == GameState::PLAYING) {
-            gameLogic(graphics, input, game, then, remainder);
-        } else if (gameState == GameState::QUIT) {
-            break;
-        }
+        if (gameState == GameState::MENU)
+            menuLogic(graphics, mainWindow, input, game, then, remainder, menu, gameState, menuState);
+        // } else if (gameState == GameState::PLAYING) {
+        //     gameLogic(graphics, input, game, then, remainder);
+        // } else if (gameState == GameState::QUIT) {
+        //     break;
+        // }
     }
 
     graphics.quit();

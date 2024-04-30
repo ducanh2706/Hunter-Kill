@@ -1,16 +1,22 @@
 #include "../library/font.h"
+#include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 Font::Font() {
     font = NULL;
 }
 
-Font::Font(string &path, int sz) {
+Font::Font(string path, int sz) {
     load(path, sz);
 }
 
-void Font::load(string &path, int sz) {
-    free();
+TTF_Font* Font::getFont() const {
+    return font;
+}
 
+void Font::load(string path, int sz) {
+    free();
     font = TTF_OpenFont(path.c_str(), sz);
     if (font == NULL) {
         logErrorAndExit("Failed to load font: ", TTF_GetError());

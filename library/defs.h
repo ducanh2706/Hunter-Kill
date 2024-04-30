@@ -9,6 +9,9 @@
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 760
 
+#define FONT_PATH "./fonts/EnterCommand.ttf"
+#define BIG_FONT 100
+#define SMALL_FONT 20
 
 
 #define MAX_KEYBOARD_KEYS 350
@@ -57,18 +60,6 @@
 #define ASSASSIN_SPRITE_FILE = "./resources/Assassin.png"
 
 #define ASSASSIN_FRAMES 9
-
-// enum Direction{
-//     UP = 0,
-//     LEFT = 1,
-//     DOWN = 2,
-//     RIGHT = 3,
-//     UP_LEFT = 4,
-//     UP_RIGHT = 5,
-//     DOWN_LEFT = 6,
-//     DOWN_RIGHT = 7
-// };
-
 
 
 

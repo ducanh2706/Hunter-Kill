@@ -1,5 +1,2 @@
 # Ignore all files in the archive folder
 /archive
-
-# Ignore all files in the build folder
-/build

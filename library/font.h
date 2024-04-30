@@ -11,12 +11,13 @@ using std::string;
 class Font {
 private:
     TTF_Font *font;
-
 public:
-    Font();
-    Font(string &path, int sz);
 
-    void load(string &path, int sz);
+    Font();
+    Font(string path, int sz);
+
+    TTF_Font* getFont() const;
+    void load(string path, int sz);
     void free();
     
 
