@@ -102,14 +102,18 @@ void Menu::logic(Input &input, State &state){
             state.menuState = MenuState::CHOOSE_LEVEL;
             currentItems = &levelItems;
             currentChoosen = &((*currentItems).front());
+            SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_DOWN]){
             state.generalState = static_cast<GeneralState>((static_cast<int>(state.generalState) + 1) % 2);
             currentChoosen = &((*currentItems)[state.generalState]);
+            SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
             state.generalState = static_cast<GeneralState>((static_cast<int>(state.generalState) - 1 + 2) % 2);
             currentChoosen = &((*currentItems)[state.generalState]);
+            SDL_Delay(200);
         }
+
     }
     else if (state.menuState == MenuState::CHOOSE_LEVEL){
         if (input.keyboard[SDL_SCANCODE_RETURN]){
@@ -117,13 +121,16 @@ void Menu::logic(Input &input, State &state){
             state.menuState = MenuState::SETTINGS;
             currentItems = &settingItems;
             currentChoosen = &((*currentItems).front());
+            SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_DOWN]){
             state.levelState = static_cast<LevelState>((static_cast<int>(state.levelState) + 1) % 3);
             currentChoosen = &((*currentItems)[state.levelState]);
+            SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
             state.levelState = static_cast<LevelState>((static_cast<int>(state.levelState) - 1 + 3) % 3);
             currentChoosen = &((*currentItems)[state.levelState]);
+            SDL_Delay(200);
         }
     } else{
         if (input.keyboard[SDL_SCANCODE_RETURN]){
@@ -132,17 +139,21 @@ void Menu::logic(Input &input, State &state){
         } else if (input.keyboard[SDL_SCANCODE_V]){
             if (state.settingState == SettingState::MUSIC) useMusic = true;
             else useSFX = true;
+            SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_X]){
             if (state.settingState == SettingState::MUSIC) useMusic = false;
             else useSFX = false;
+            SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_DOWN]){
             state.settingState = static_cast<SettingState>((static_cast<int>(state.settingState) + 1) % 2);
             currentChoosen = &((*currentItems)[state.settingState]);
+            SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
             state.settingState = static_cast<SettingState>((static_cast<int>(state.settingState) - 1 + 2) % 2);
             currentChoosen = &((*currentItems)[state.settingState]);
+            SDL_Delay(200);
         }
     }
     

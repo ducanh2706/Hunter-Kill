@@ -61,11 +61,6 @@ void Game::initBackground() {
 
 
 void Game::initTexture() {
-    // player_texture = graphics->loadTexture(PLAYER_IMG_SOURCE);
-    // enemy_texture = graphics->loadTexture(ENEMY_IMG_SOURCE);
-    // background_texture = graphics->loadTexture(BACKGROUND_IMG_SOURCE);
-    // bullet_texture = graphics->loadTexture(BULLET_IMG_SOURCE);
-
     playerTexture.loadFromFile(PLAYER_IMG_SOURCE);
     enemyTexture.loadFromFile(ENEMY_IMG_SOURCE);
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
@@ -93,21 +88,17 @@ void Game::doPlayer(int* keyboard) {
 
     if (keyboard[SDL_SCANCODE_LEFT]) {
         player->x -= player->dx;
-        // player->direction = LEFT;
     }
     else if (keyboard[SDL_SCANCODE_RIGHT]) {
         player->x += player->dx;
-        // player->direction = RIGHT;
     }
 
     else if (keyboard[SDL_SCANCODE_UP]) {
         player->y -= player->dy;
-        // player->direction = UP;
     }
 
     else if (keyboard[SDL_SCANCODE_DOWN]) {
         player->y += player->dy;
-        // player->direction = DOWN;
     }
 
     for (auto &obstacle : level.obstacles) {

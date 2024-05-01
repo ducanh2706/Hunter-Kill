@@ -3,7 +3,6 @@
 
 #include "font.h"
 #include "defs.h"
-#include "graphics.h"
 #include "texture.h"
 #include "mainwindow.h"
 #include "inputs.h"

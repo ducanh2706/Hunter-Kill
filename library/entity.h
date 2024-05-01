@@ -5,7 +5,6 @@
 #include <math.h>
 
 #include "defs.h"
-#include "graphics.h"
 #include "texture.h"
 #include "Maths/rectangle.h"
 #include "Maths/vector2.h"
@@ -28,11 +27,9 @@ public:
     int health; /**** player: initial health. enemy: alive or killed ****/
 
     int changeSide;
-    // Direction direction;
 
 
     SDL_Rect *rect;
-    // SDL_Texture *texture;
     Texture *texture;
 
     Entity();

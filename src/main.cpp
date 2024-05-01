@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
-#include "../library/graphics.h"
 #include "../library/defs.h"
 #include "../library/draw.h"
 #include "../library/inputs.h"
@@ -13,15 +12,15 @@
 
 void menuLogic(MainWindow &mainWindow, Input &input, Menu &menu, State &state, long long &then, double &remainder) {
     while (state.gameState == GameState::MENU){
-        input.get();
         mainWindow.clear();
-
-        menu.logic(input, state);
         menu.render(state);
-
         mainWindow.update();
+
+        input.get();
+        menu.logic(input, state);
+
         
-        SDL_Delay(70);
+        SDL_Delay(10);
     }
 
     SDL_Delay(2000);
