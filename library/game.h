@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "texture.h"
 #include "font.h"
+#include "music.h"
 
 #include "Maths/random.h"
 #include "Maths/vector2.h"
@@ -37,6 +38,10 @@ public:
     Entity *player;
     std::list<Enemy*> enemies;
     std::list<Enemy*> bullets;
+    
+    Sound playerWalking, playerKill, playerKilled;
+    Sound enemyShooting;
+
     RandomGenerator random;
     Font mFont;
     int killedEnemies = 0;
@@ -51,6 +56,7 @@ public:
 
 
     Texture playerTexture, enemyTexture, backgroundTexture, bulletTexture;
+    Texture lightTexture;
 
 
     Game(const MainWindow &_mainWindow);
@@ -61,6 +67,8 @@ public:
     void initBackground();
     void initTexture();
     void init();
+
+    bool checkCollision(Entity *enemy);
 
     void doPlayer(int* keyboard);
     void doEnemy();
@@ -76,9 +84,8 @@ public:
     void drawBullet();
     void doDraw();
 
-    void enemySeek(Enemy *enemy);
-    void enemyWander(Enemy *enemy);
-    void enemyChase(Enemy *enemy);
+    bool enemySeek(Enemy *enemy, Vector2 seekPosition, double detectionRadius, bool isWandering);
+    bool enemyWander(Enemy *enemy, Vector2 seekPosition, double detectionRadius);
 };
 
 #endif

@@ -6,18 +6,33 @@ Game::Game(const MainWindow &_mainWindow):
     playerTexture{_mainWindow.getRenderer()},
     enemyTexture{_mainWindow.getRenderer()},
     backgroundTexture{_mainWindow.getRenderer()},
-    bulletTexture{_mainWindow.getRenderer()}
+    bulletTexture{_mainWindow.getRenderer()},
+    lightTexture{_mainWindow.getRenderer()}
     {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////// SECTION: INIT ///////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool Game::checkCollision(Entity *enemy){
+    for (Rectangle &obstacle : level.obstacles) {
+        if (enemy->collide(obstacle)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Game::initPlayer() {
     player = new Entity();
-    player->x = PLAYER_INIT_X;
-    player->y = PLAYER_INIT_Y;
     player->w = PLAYER_IMG_W;
     player->h = PLAYER_IMG_H;
+    do {
+        player->x = random.randInt(0, 39) * TILE_SIZE;
+        player->y = random.randInt(0, 23) * TILE_SIZE;
+    } while (
+        checkCollision(player)
+    );
     player->dx = player->dy = PLAYER_SPEED;
     player->texture = &playerTexture;
     player->side = PLAYER_SIDE;
@@ -26,21 +41,26 @@ void Game::initPlayer() {
     player->h = PLAYER_IMG_H;
 }
 
+
 void Game::initEnemy() {
     for (int i = 0; i < level.numMaps; i++) {
         for (int j = 0; j < level.numOfEnemies[i]; j++) {
             Enemy *enemy = new Enemy();
-            enemy->x = random.randInt((int)level.maps[i].x * TILE_SIZE, ((int)level.maps[i].u) * TILE_SIZE);
-            enemy->y = random.randInt((int)level.maps[i].y * TILE_SIZE, ((int)level.maps[i].v) * TILE_SIZE);
-            enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->w = ENEMY_IMG_W;
             enemy->h = ENEMY_IMG_H;
+            do {
+                enemy->x = random.randInt((int)level.maps[i].x * TILE_SIZE, ((int)level.maps[i].u) * TILE_SIZE);
+                enemy->y = random.randInt((int)level.maps[i].y * TILE_SIZE, ((int)level.maps[i].v) * TILE_SIZE);
+            } while (
+                checkCollision(enemy)
+            );
+            enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->texture = &enemyTexture;
             enemy->side = ENEMY_SIDE;
             enemy->changeSide = FPS * 3;
+            enemy->isWandering = 0;
             enemy->health = 1;
             enemy->tSeek = 0;
-            enemy->radius = IN_RADIUS;
             enemy->reload = 0;
             enemy->inRec = i;
             enemy->isChasing = false;
@@ -65,6 +85,8 @@ void Game::initTexture() {
     enemyTexture.loadFromFile(ENEMY_IMG_SOURCE);
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
+    lightTexture.loadFromFile(LIGHT_IMG_SOURCE);
+    lightTexture.setAlpha(128);
 }
 
 void Game::initFont() {
@@ -112,42 +134,48 @@ void Game::doPlayer(int* keyboard) {
 
 void Game::doEnemy() {
     for (auto &enemy : enemies) {
-        enemySeek(enemy);
-        // if (enemy->distanceToOther(player) > FIND_RADIUS){
-        //     // wandering
-        // } else if (enemy->inRange(player)){
-        //     // attacking
-        // }
-        // else{
-        //     // seeking
-        // }
-        // enemy->x += enemy->dx * direction_x[enemy->direction];
-        // enemy->y += enemy->dy * direction_y[enemy->direction];
-        // if (enemy->x < 0) {
-        //     enemy->x = 0;
-        // }
-        // else if (enemy->x > SCREEN_WIDTH - enemy->w) {
-        //     enemy->x = SCREEN_WIDTH - enemy->w;
-        // }
-        // if (enemy->y < 0) {
-        //     enemy->y = 0;
-        // }
-        // else if (enemy->y > SCREEN_HEIGHT - enemy->h) {
-        //     enemy->y = SCREEN_HEIGHT - enemy->h;
-        // }
+        if (enemy->inRange(player, IN_RADIUS)){
+            /// @note: IN RANGE nhưng phải nhìn thấy mà không có vật cản -> check ray cast
+            bool check = true;
+            for (auto &obstacle : level.obstacles) {
+                if (obstacle.intersect(Vector2(enemy->x, enemy->y), Vector2(player->x, player->y))) {
+                    check = false;
+                    break;
+                }
+            }
+            if (--enemy->reload <= 0 && check){
+                fireBullet(enemy);
+            }
+        }
 
-        // --enemy->changeSide;
-        // if (enemy->changeSide == 0) {
-        //     int prevDirection = enemy->direction;
-        //     enemy->direction = (Direction)random.randInt(0, 3);
-        //     while (enemy->direction == prevDirection) {
-        //         enemy->direction = (Direction)random.randInt(0, 3);
-        //     }
-        //     enemy->changeSide = FPS * 3;
-        // }
+        if (enemy->inRange(player, OUT_RADIUS) || --enemy->isChasing >= 0){
+            enemySeek(enemy, Vector2(player->x, player->y), OUT_RADIUS, false);
+            enemy->isWandering = 0; 
+            enemy->isChasing = FPS;
+        }
+        else{
+            if (--enemy->isWandering <= 0){
+                Entity *nEntity = new Entity();
+                do {
+                    double x = random.randFloat(-100.0, 100.0);
+                    double y = random.randFloat(-sqrt(10000 - x * x), sqrt(10000 - x * x));
+                    nEntity->x = enemy->x + x;
+                    nEntity->y = enemy->y + y;
+                    
+                } while (
+                    checkCollision(nEntity) || !(nEntity->x > 0 && nEntity->y > 0 && nEntity->x < SCREEN_WIDTH - enemy->w && nEntity->y < SCREEN_HEIGHT - enemy->h)
+                );
 
-
-        
+                enemy->isWanderingTo = Vector2(nEntity->x, nEntity->y);
+                enemyWander(enemy, enemy->isWanderingTo, 100);
+                enemy->isWandering = FPS * 3;
+            } else{
+                bool reached = enemyWander(enemy, enemy->isWanderingTo, 100);
+                if (reached) {
+                    enemy->isWandering = 0;
+                }
+            }
+        }
     }
 }
 
@@ -158,8 +186,8 @@ void Game::doKill() {
         auto temp = ins++;
         Enemy *b = *temp;
         if (player->collide(b)) {
-            // delete b;
-            // enemies.erase(temp);
+            delete b;
+            enemies.erase(temp);
             // Alert there is an enemy killed in the region
             /*
                 1. Check where is that region
@@ -175,6 +203,7 @@ void Game::fireBullet(Enemy *enemy) {
     bullet->y = enemy->y;
     bullet->side = ENEMY_SIDE;
     bullet->texture = &bulletTexture;
+    SDL_QueryTexture(bulletTexture.mTexture, NULL, NULL, &bullet->w, &bullet->h);
     bullet->health = BULLET_HEALTH;
     bullets.push_back(bullet);
 
@@ -196,16 +225,17 @@ void Game::doBullet() {
         Enemy *b = *temp;
         b->x += b->dx;
         b->y += b->dy;
-        // if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT) {
-        //     player->health = 0;
-        //     b->health = 0;
-        //     delete b;
-        //     bullets.erase(temp);
-        // }
+        if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT) {
+            player->health--;
+            b->health = 0;
+            delete b;
+            bullets.erase(temp);
+        }
     }
 }
 
 void Game::doLogic(int *keyboard) {
+    // if (player->health <= 0) exit(0);
     doPlayer(keyboard);
     doEnemy();
     doKill();
@@ -222,20 +252,11 @@ void Game::drawBackground() {
 void Game::drawPlayer() {
     
     if (player->health) {
-        // player->sprite->tick(player->direction);
-        // const SDL_Rect *srect = player->sprite->getCurrentClip(player->direction);
-        // SDL_Rect dest;
-        // dest.x = player->x;
-        // dest.y = player->y;
-        // dest.w = player->w;
-        // dest.h = player->h;
-        // SDL_RenderCopy(graphics->renderer, player->texture, srect, &dest);
-        // graphics->renderTexture(player->texture, player->x, player->y);
         SDL_Rect dest;
         dest.x = player->x;
         dest.y = player->y;
-        dest.w = ENEMY_IMG_W;
-        dest.h = ENEMY_IMG_H;
+        dest.w = PLAYER_IMG_W;
+        dest.h = PLAYER_IMG_H;
         player->texture->blit(&dest);
     }
 }
@@ -248,6 +269,19 @@ void Game::drawEnemy() {
         dest.w = ENEMY_IMG_W;
         dest.h = ENEMY_IMG_H;
         enemy->texture->blit(&dest);
+        
+
+        dest.x = enemy->x + 16;
+        dest.y = enemy->y - 16;
+        dest.w = 64;
+        dest.h = 64;
+
+        double angle = atan2(enemy->dy, enemy->dx);
+        angle = angle * 180 / PI;
+
+        SDL_Point *point = new SDL_Point{0, 32};
+        lightTexture.blit(&dest, angle, point);
+        /// @note: Cần vẽ thêm hình bán nguyệt thể hiện tầm bắn hiện tại
     }
 }
 
@@ -259,12 +293,17 @@ void Game::drawBullet() {
 
 void Game::drawScoreboard() {
     Texture scoreboard(mainWindow.getRenderer());
+    Texture health(mainWindow.getRenderer());
     
     scoreboard.loadFromRenderedText("Score: " + std::to_string(killedEnemies), mFont, {0, 0, 0});
     scoreboard.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 0);
+
+    health.loadFromRenderedText("Health: " + std::to_string(player->health), mFont, {0, 0, 0});
+    health.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 30);
 }
 
 void Game::doDraw() {
+    // if (player->health <= 0) exit(0);
     drawBackground();
     drawScoreboard();
     drawPlayer();
@@ -273,14 +312,11 @@ void Game::doDraw() {
 }
 
 
-void Game::enemyWander(Enemy *enemy) {
+bool Game::enemyWander(Enemy *enemy, Vector2 seekingPosition, double detectionRadius) {
+    return enemySeek(enemy, seekingPosition, detectionRadius, true);
 }
 
-void Game::enemyChase(Enemy *enemy) {
-
-}
-
-void Game::enemySeek(Enemy *enemy) {
+bool Game::enemySeek(Enemy *enemy, Vector2 seekingPosition, double detectionRadius, bool isWandering) {
     ContextSolver &solver = enemy->solver;
     ObstacleAvoidance &obstacleAvoidance = enemy->obstacleAvoidance;
     ObstacleDetector &obstacleDetector = enemy->obstacleDetector;
@@ -295,17 +331,19 @@ void Game::enemySeek(Enemy *enemy) {
     obstacleDetector.detect(level.obstacles, Vector2(enemy->x, enemy->y), detectedObstacles);
 
 
-    bool targetDetected = targetDetector.detect(level.obstacles, Vector2(enemy->x, enemy->y), Vector2(player->x, player->y));
+    bool targetDetected = targetDetector.detect(level.obstacles, Vector2(enemy->x, enemy->y), seekingPosition, detectionRadius);
     
     obstacleAvoidance.getSteering(danger, interest, Vector2(enemy->x, enemy->y), detectedObstacles);
+    double dis = (Vector2(enemy->x, enemy->y) - seekingPosition).length();
+    targetSeek.getSteering(danger, interest, detectedObstacles, Vector2(enemy->x, enemy->y), seekingPosition, targetDetected || (isWandering && dis > 96));
+    if (targetSeek.reachLastTarget) return true;
 
-    targetSeek.getSteering(danger, interest, detectedObstacles, Vector2(enemy->x, enemy->y), Vector2(player->x, player->y), targetDetected);
     Vector2 direction = solver.GetDirectionToMove(danger, interest);
 
-    enemy->x += direction.x;
-    enemy->y += direction.y;
-
-    if (enemy->x == 0 && enemy->y == 0){
-        exit(0);
-    }
+    enemy->dx = direction.x;
+    enemy->dy = direction.y;
+    enemy->x += enemy->dx;
+    enemy->y += enemy->dy;
+    if (enemy->dx == 0 && enemy->dy == 0) return true;
+    return false;
 }

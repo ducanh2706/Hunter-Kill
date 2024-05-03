@@ -1,15 +1,8 @@
 #include "../../library/AI/target.seek.h"
 
 void SeekBehavior::getSteering(double *danger, double *interest, vector<Rectangle> &obstacles, Vector2 enemy, Vector2 player, bool canSeeTarget){
-    if (reachLastTarget) {
-
-    }
-
     if (canSeeTarget) {
         targetPositionCached = player;
-    }
-    else{
-
     }
 
     if ((targetPositionCached - enemy).length() < targetReachedThreshold){

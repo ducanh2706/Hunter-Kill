@@ -9,11 +9,11 @@
 
 class SeekBehavior {
 private:
-    double targetReachedThreshold = 32;
-    bool reachLastTarget = true;
+    double targetReachedThreshold = 20;
     Vector2 targetPositionCached;
 
 public:
+    bool reachLastTarget = true;
     void getSteering(double *danger, double *interest, vector<Rectangle> &obstacles, Vector2 enemy, Vector2 player, bool canSeeTarget);
 };
 

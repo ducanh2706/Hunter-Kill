@@ -8,10 +8,8 @@
 using std::vector;
 
 class TargetDetector {
-private:
-    double detectionRadius = 500;
 public:
-    bool detect(vector<Rectangle> &obstacles, Vector2 enemy, Vector2 player);
+    bool detect(vector<Rectangle> &obstacles, Vector2 enemy, Vector2 player, double detectionRadius);
 };
 
 #endif

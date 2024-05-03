@@ -15,7 +15,7 @@ public:
 
     template<class T>
     T randInt(T l, T r) {
-        std::uniform_int_distribution<T> distribution(l, r);
+        std::uniform_int_distribution<long long> distribution(l, r);
         return distribution(rng);
     }
 

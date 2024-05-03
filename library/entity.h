@@ -42,11 +42,12 @@ public:
 class Enemy : public Entity {
 
 public:
-    int radius;
     int reload;
     int inRec;
-    bool isChasing;
+    int isChasing;
     int tSeek;
+    int isWandering;
+    Vector2 isWanderingTo;
     vector<pair<int, int>> path;
     ContextSolver solver;
     ObstacleAvoidance obstacleAvoidance;
@@ -54,7 +55,7 @@ public:
     TargetDetector targetDetector;
     SeekBehavior targetSeek;
 
-    bool inRange(const Entity *player) const;
+    bool inRange(const Entity *player, int radius) const;
 };
 
 

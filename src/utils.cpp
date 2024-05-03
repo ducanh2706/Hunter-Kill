@@ -56,3 +56,4 @@ void capFrameRate(long long *then, double *remainder) {
 bool outOfMap(double x, double y, int w, int h) {
 	return x < 0 || y < 0 || x + w > SCREEN_WIDTH || y + h > SCREEN_HEIGHT;
 }
+

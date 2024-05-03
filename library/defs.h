@@ -26,35 +26,36 @@
 #define ENEMY_IMG_SOURCE "./resources/Opponent.png"
 #define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
+#define LIGHT_IMG_SOURCE "./resources/light.png"
 
 #define BACKGROUND_IMG_W 64
 #define BACKGROUND_IMG_H 64
 
-#define PLAYER_IMG_W 64
-#define PLAYER_IMG_H 64
-#define PLAYER_ORIGINAL_W 64
-#define PLAYER_ORIGINAL_H 64
+#define PLAYER_IMG_W 32
+#define PLAYER_IMG_H 32
+#define PLAYER_ORIGINAL_W 32
+#define PLAYER_ORIGINAL_H 32
 
 #define ENEMY_IMG_W 32
 #define ENEMY_IMG_H 32
 
 #define ENEMY_SPEED 1
 #define PLAYER_SPEED 4
-#define BULLET_SPEED 20
+#define BULLET_SPEED 4
 
 #define ENEMY_SIDE 1
 #define PLAYER_SIDE 0
 
-#define PLAYER_INIT_X 100
-#define PLAYER_INIT_Y 100
+#define PLAYER_INIT_X 200
+#define PLAYER_INIT_Y 200
 
 #define PLAYER_INITIAL_HEALTH 10
 
 #define BULLET_HEALTH 1
 
 
-#define IN_RADIUS 5
-#define FIND_RADIUS 10
+#define IN_RADIUS 128
+#define OUT_RADIUS 256
 #define PI acos(-1)
 
 #define ASSASSIN_SPRITE_FILE = "./resources/Assassin.png"
