@@ -6,8 +6,11 @@
 
 #include "defs.h"
 #include "texture.h"
+#include "sprites.h"
+
 #include "Maths/rectangle.h"
 #include "Maths/vector2.h"
+
 #include "AI/context.solver.h"
 #include "AI/obstacle.avoidance.h"
 #include "AI/Obstacle.detector.h"
@@ -27,11 +30,9 @@ public:
     bool side;
     int health; /**** player: initial health. enemy: alive or killed ****/
 
-    int changeSide;
-
-
     SDL_Rect *rect;
     Texture *texture;
+    Sprite *sprite;
 
     Entity();
 
@@ -41,7 +42,6 @@ public:
 };
 
 class Enemy : public Entity {
-
 public:
     int reload;
     int inRec;

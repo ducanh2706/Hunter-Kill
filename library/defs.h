@@ -27,6 +27,7 @@
 #define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 #define LIGHT_IMG_SOURCE "./resources/light.png"
+#define PLAYER_WALKING_SOURCE "./resources/player/walk.png"
 
 
 #define WALKING_SOUND "./audio/SFX/player/walking.ogg"

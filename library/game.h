@@ -52,13 +52,9 @@ public:
     static constexpr int direction_x[4] = {0, 0, -1, 1};
     static constexpr int direction_y[4] = {-1, 1, 0, 0};
 
-    // SDL_Texture *player_texture, *enemy_texture;
-    // SDL_Texture *background_texture;
-    // SDL_Texture *bullet_texture;
-
-
     Texture playerTexture, enemyTexture, backgroundTexture, bulletTexture;
     Texture lightTexture;
+    Sprite playerWalkingSprite;
 
 
     Game(const MainWindow &_mainWindow);

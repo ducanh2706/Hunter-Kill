@@ -7,7 +7,8 @@ Game::Game(const MainWindow &_mainWindow):
     enemyTexture{_mainWindow.getRenderer()},
     backgroundTexture{_mainWindow.getRenderer()},
     bulletTexture{_mainWindow.getRenderer()},
-    lightTexture{_mainWindow.getRenderer()}
+    lightTexture{_mainWindow.getRenderer()},
+    playerWalkingSprite{_mainWindow.getRenderer()}
     {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ void Game::initPlayer() {
     );
     player->dx = player->dy = PLAYER_SPEED;
     player->texture = &playerTexture;
+    player->sprite = &playerWalkingSprite;
     player->side = PLAYER_SIDE;
     player->health = PLAYER_INITIAL_HEALTH;
     player->w = PLAYER_IMG_W;
@@ -66,7 +68,6 @@ void Game::initEnemy() {
             enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->texture = &enemyTexture;
             enemy->side = ENEMY_SIDE;
-            enemy->changeSide = FPS * 3;
             enemy->isWandering = 0;
             enemy->health = 1;
             enemy->tSeek = 0;
@@ -95,16 +96,18 @@ void Game::initTexture() {
     enemyTexture.loadFromFile(ENEMY_IMG_SOURCE);
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
+    playerWalkingSprite.loadFromFile(PLAYER_WALKING_SOURCE);
+    playerWalkingSprite.init(0, 24, 256, 256, 64, 64);
     lightTexture.loadFromFile(LIGHT_IMG_SOURCE);
     lightTexture.setAlpha(128);
 }
 
 void Game::initSound() {
     playerWalking.load(WALKING_SOUND);
-    playerKilled.load(PLAYER_KILLED_SOUND);
+    // playerKilled.load(PLAYER_KILLED_SOUND);
     enemyShooting.load(ENEMY_SHOOTING_SOUND);
     enemyKilled.load(ENEMY_KILLED_SOUND);
-    endGame.load(END_GAME);
+    // endGame.load(END_GAME);
 
 }
 
@@ -125,8 +128,8 @@ void Game::init() {
 ///////// SECTION: LOGIC //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Game::doPlayer(int* keyboard) {
-    int prev_x = player->x;
-    int prev_y = player->y;
+    double prev_x = player->x;
+    double prev_y = player->y;
 
     if (keyboard[SDL_SCANCODE_LEFT]) {
         player->x -= player->dx;
@@ -150,6 +153,9 @@ void Game::doPlayer(int* keyboard) {
             break;
         }
     }
+    if (player->x != prev_x || player->y != prev_y) {
+        // playerWalking.play();
+    }
 }
 
 void Game::doEnemy() {
@@ -165,6 +171,7 @@ void Game::doEnemy() {
             }
             if (--enemy->reload <= 0 && check){
                 fireBullet(enemy);
+                enemyShooting.play();
             }
         }
 
@@ -227,6 +234,8 @@ void Game::doKill() {
         if (player->collide(b)) {
             delete b;
             enemies.erase(temp);
+            cout << "?" << endl;
+            enemyKilled.play();
             // Alert there is an enemy killed in the region
             /*
                 1. Check where is that region
@@ -299,7 +308,9 @@ void Game::drawPlayer() {
         dest.y = player->y;
         dest.w = PLAYER_IMG_W;
         dest.h = PLAYER_IMG_H;
-        player->texture->blit(&dest);
+        // player->texture->blit(&dest);
+        player->sprite->tick();
+        player->sprite->render(player->x, player->y);
     }
 }
 
@@ -322,7 +333,7 @@ void Game::drawEnemy() {
         angle = angle * 180 / PI;
 
         SDL_Point *point = new SDL_Point{0, 32};
-        lightTexture.blit(&dest, angle, point);
+        lightTexture.blit(&dest, nullptr, angle, point);
         /// @note: Cần vẽ thêm hình bán nguyệt thể hiện tầm bắn hiện tại
     }
 }
