@@ -29,6 +29,10 @@ void Music::play() {
     }
 }
 
+bool Music::isPlaying() {
+    return Mix_PlayingMusic() == 1;
+}
+
 void Music::pause() {
     if (Mix_PlayingMusic() == 1){
         Mix_PauseMusic();
@@ -45,6 +49,7 @@ void Music::free() {
         Mix_FreeMusic(gMusic);
     }
 }
+
 
 Sound::Sound() {}
 

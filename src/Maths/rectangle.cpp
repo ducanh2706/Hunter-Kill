@@ -75,3 +75,8 @@ bool Rectangle::intersect(Vector2 pointA, Vector2 pointB) {
         || lineIntersect(pointA, pointB, bottomRight, bottomLeft)
         || lineIntersect(pointA, pointB, bottomLeft, topLeft); 
 }
+
+bool Rectangle::contain(Vector2 point) {
+    return x * TILE_SIZE <= point.x && point.x <= (u + 1) * TILE_SIZE
+        && y * TILE_SIZE <= point.y && point.y <= (v + 1) * TILE_SIZE;
+}

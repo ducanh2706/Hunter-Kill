@@ -18,6 +18,7 @@ public:
 
     bool inMap(double _x, double _y) const;
     bool intersect(Vector2 position, Vector2 direction);
+    bool contain(Vector2 point);
     Vector2 getClosestPoint(Vector2 position) const;
 };
 

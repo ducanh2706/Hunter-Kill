@@ -34,3 +34,10 @@ Vector2 Vector2::normalize() {
     double magnitude = sqrt(x * x + y * y);
     return Vector2(x / magnitude, y / magnitude);
 }      
+
+Vector2 Vector2::rotate(double angle){
+    double rad = angle * PI / 180;
+    double newX = x * cos(rad) - y * sin(rad);
+    double newY = x * sin(rad) + y * cos(rad);
+    return Vector2(newX, newY);
+}

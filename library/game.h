@@ -39,12 +39,14 @@ public:
     std::list<Enemy*> enemies;
     std::list<Enemy*> bullets;
     
-    Sound playerWalking, playerKill, playerKilled;
-    Sound enemyShooting;
+    Sound playerWalking, playerKilled;
+    Sound enemyShooting, enemyKilled;
+    Sound endGame;
 
     RandomGenerator random;
     Font mFont;
     int killedEnemies = 0;
+
 
     static const int ENEMIES_NUMBER = 1;
     static constexpr int direction_x[4] = {0, 0, -1, 1};
@@ -61,6 +63,7 @@ public:
 
     Game(const MainWindow &_mainWindow);
 
+    void initSound();
     void initFont();
     void initPlayer();
     void initEnemy();
@@ -69,6 +72,7 @@ public:
     void init();
 
     bool checkCollision(Entity *enemy);
+    bool checkInMap(Entity *enemy);
 
     void doPlayer(int* keyboard);
     void doEnemy();

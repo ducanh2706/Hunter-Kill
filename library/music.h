@@ -22,6 +22,7 @@ public:
     void pause();
     void stop();
     void free();
+    bool isPlaying();
 
 };
 

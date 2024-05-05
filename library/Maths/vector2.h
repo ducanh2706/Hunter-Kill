@@ -2,6 +2,7 @@
 #define _VECTOR2__H
 
 #include <math.h>
+#include "../defs.h"
 
 class Vector2 {
 public:
@@ -23,6 +24,7 @@ public:
     double length();
 
     Vector2 normalize();
+    Vector2 rotate(double angle);
 };
 
 #endif

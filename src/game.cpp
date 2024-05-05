@@ -23,6 +23,15 @@ bool Game::checkCollision(Entity *enemy){
     return false;
 }
 
+bool Game::checkInMap(Entity *enemy){
+    for (Rectangle &map : level.maps) {
+        if (map.contain(Vector2(enemy->x, enemy->y))) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Game::initPlayer() {
     player = new Entity();
     player->w = PLAYER_IMG_W;
@@ -69,6 +78,7 @@ void Game::initEnemy() {
             enemy->obstacleDetector = ObstacleDetector();
             enemy->targetDetector = TargetDetector();
             enemy->targetSeek = SeekBehavior();
+            enemy->wanderingBehavior = WanderingBehavior();
 
             enemies.push_back(enemy); 
         }
@@ -89,11 +99,21 @@ void Game::initTexture() {
     lightTexture.setAlpha(128);
 }
 
+void Game::initSound() {
+    playerWalking.load(WALKING_SOUND);
+    playerKilled.load(PLAYER_KILLED_SOUND);
+    enemyShooting.load(ENEMY_SHOOTING_SOUND);
+    enemyKilled.load(ENEMY_KILLED_SOUND);
+    endGame.load(END_GAME);
+
+}
+
 void Game::initFont() {
     mFont.load(FONT_PATH, SMALL_FONT);
 }
 
 void Game::init() {
+    initSound();
     initFont();
     initTexture();
     initBackground();
@@ -149,28 +169,47 @@ void Game::doEnemy() {
         }
 
         if (enemy->inRange(player, OUT_RADIUS) || --enemy->isChasing >= 0){
-            enemySeek(enemy, Vector2(player->x, player->y), OUT_RADIUS, false);
+            // cout << "Ô vcl luôn" << endl;
+            bool reached = enemySeek(enemy, Vector2(player->x, player->y), OUT_RADIUS, false);
+            if (!reached)
+                enemy->isChasing = FPS;
+            else 
+                enemy->isChasing = 0;
+
             enemy->isWandering = 0; 
-            enemy->isChasing = FPS;
         }
         else{
             if (--enemy->isWandering <= 0){
-                Entity *nEntity = new Entity();
-                do {
-                    double x = random.randFloat(-100.0, 100.0);
-                    double y = random.randFloat(-sqrt(10000 - x * x), sqrt(10000 - x * x));
-                    nEntity->x = enemy->x + x;
-                    nEntity->y = enemy->y + y;
-                    
-                } while (
-                    checkCollision(nEntity) || !(nEntity->x > 0 && nEntity->y > 0 && nEntity->x < SCREEN_WIDTH - enemy->w && nEntity->y < SCREEN_HEIGHT - enemy->h)
-                );
+                if (random.randInt(0, 1) == 0){
+                    Entity *nEntity = new Entity();
+                    do {
+                        double x = random.randFloat(-100.0, 100.0);
+                        double y = random.randFloat(-sqrt(10000 - x * x), sqrt(10000 - x * x));
+                        nEntity->x = enemy->x + x;
+                        nEntity->y = enemy->y + y;
+                        
+                    } while (
+                        checkCollision(nEntity) || !checkInMap(nEntity)
+                    );
 
-                enemy->isWanderingTo = Vector2(nEntity->x, nEntity->y);
-                enemyWander(enemy, enemy->isWanderingTo, 100);
+                    enemy->isWanderingTo = Vector2(nEntity->x, nEntity->y);
+                } else {
+                    Vector2 seekingPosition;
+                    Entity *newEntity = new Entity();
+                    newEntity->w = enemy->w;
+                    newEntity->h = enemy->h;
+                    do{
+                        seekingPosition = enemy->wanderingBehavior.getTarget(Vector2(enemy->x, enemy->y), Vector2(enemy->dx, enemy->dy), random);
+                        newEntity->x = seekingPosition.x;
+                        newEntity->y = seekingPosition.y;
+
+                    } while (!checkInMap(newEntity));
+                    enemy->isWanderingTo = seekingPosition;
+                }
+                enemyWander(enemy, enemy->isWanderingTo, OUT_RADIUS);
                 enemy->isWandering = FPS * 3;
             } else{
-                bool reached = enemyWander(enemy, enemy->isWanderingTo, 100);
+                bool reached = enemyWander(enemy, enemy->isWanderingTo, OUT_RADIUS);
                 if (reached) {
                     enemy->isWandering = 0;
                 }
@@ -225,8 +264,11 @@ void Game::doBullet() {
         Enemy *b = *temp;
         b->x += b->dx;
         b->y += b->dy;
-        if (b->collide(player) || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT) {
-            player->health--;
+        bool isCollide = b->collide(player);
+        if (isCollide || b->x < -b->w || b->y < -b->h || b->x > SCREEN_WIDTH || b->y > SCREEN_HEIGHT || checkCollision(b)) {
+            if (isCollide){
+                player->health--;
+            }
             b->health = 0;
             delete b;
             bullets.erase(temp);
@@ -344,6 +386,7 @@ bool Game::enemySeek(Enemy *enemy, Vector2 seekingPosition, double detectionRadi
     enemy->dy = direction.y;
     enemy->x += enemy->dx;
     enemy->y += enemy->dy;
+    if (!checkInMap(enemy) || checkCollision(enemy)) return true;
     if (enemy->dx == 0 && enemy->dy == 0) return true;
     return false;
 }

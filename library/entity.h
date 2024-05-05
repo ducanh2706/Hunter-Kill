@@ -12,6 +12,7 @@
 #include "AI/obstacle.avoidance.h"
 #include "AI/Obstacle.detector.h"
 #include "AI/target.detector.h"
+#include "AI/context.wandering.h"
 #include "AI/target.seek.h"
 
 using std::pair;
@@ -53,6 +54,7 @@ public:
     ObstacleAvoidance obstacleAvoidance;
     ObstacleDetector obstacleDetector;
     TargetDetector targetDetector;
+    WanderingBehavior wanderingBehavior;
     SeekBehavior targetSeek;
 
     bool inRange(const Entity *player, int radius) const;

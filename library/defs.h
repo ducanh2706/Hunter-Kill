@@ -28,6 +28,15 @@
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 #define LIGHT_IMG_SOURCE "./resources/light.png"
 
+
+#define WALKING_SOUND "./audio/SFX/player/walking.ogg"
+#define ENEMY_KILLED_SOUND "./audio/SFX/enemy/killed.wav"
+#define PLAYER_KILLED_SOUND "./audio/SFX/player/killed.wav"
+#define ENEMY_SHOOTING_SOUND "./audio/SFX/enemy/shooting.wav"
+#define END_GAME "./audio/SFX/player/endgame.wav"
+
+
+
 #define BACKGROUND_IMG_W 64
 #define BACKGROUND_IMG_H 64
 

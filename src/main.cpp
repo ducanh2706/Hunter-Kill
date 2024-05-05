@@ -10,8 +10,9 @@
 #include "../library/mainwindow.h"
 #include "../library/state.h"
 
-void menuLogic(MainWindow &mainWindow, Input &input, Menu &menu, State &state, long long &then, double &remainder) {
+void menuLogic(MainWindow &mainWindow, Input &input, Menu &menu, State &state, Music &backgroundMusic, long long &then, double &remainder) {
     while (state.gameState == GameState::MENU){
+        backgroundMusic.play();
         mainWindow.clear();
         menu.render(state);
         mainWindow.update();
@@ -26,9 +27,10 @@ void menuLogic(MainWindow &mainWindow, Input &input, Menu &menu, State &state, l
     SDL_Delay(2000);
 }
 
-void gameLogic(MainWindow &mainWindow, Input &input, Game &game, long long &then, double &remainder) {
+void gameLogic(MainWindow &mainWindow, Input &input, Game &game, Music &backgroundMusic, long long &then, double &remainder) {
 
     while (true){
+        backgroundMusic.play();
         mainWindow.clear();
         input.get();
 
@@ -53,6 +55,10 @@ int main(int argc, char** argv) {
     Game game(mainWindow);
     game.init();
     
+    Music backgroundMusic;
+    backgroundMusic.load("./audio/Music/music.wav");
+    backgroundMusic.play();
+
     State state;
 
     long long then = SDL_GetTicks64();
@@ -60,9 +66,9 @@ int main(int argc, char** argv) {
     
     while (true) {
         if (state.gameState == GameState::MENU)
-            menuLogic(mainWindow, input, menu, state, then, remainder);
+            menuLogic(mainWindow, input, menu, state, backgroundMusic, then, remainder);
         else if (state.gameState == GameState::PLAYING)
-            gameLogic(mainWindow, input, game, then, remainder);
+            gameLogic(mainWindow, input, game, backgroundMusic, then, remainder);
         else
             break;
     }
