@@ -251,7 +251,7 @@ void Game::fireBullet(Enemy *enemy) {
     bullet->y = enemy->y;
     bullet->side = ENEMY_SIDE;
     bullet->texture = &bulletTexture;
-    SDL_QueryTexture(bulletTexture.mTexture, NULL, NULL, &bullet->w, &bullet->h);
+    SDL_QueryTexture(bullet->texture->getTexture(), NULL, NULL, &bullet->w, &bullet->h);
     bullet->health = BULLET_HEALTH;
     bullets.push_back(bullet);
 

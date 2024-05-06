@@ -28,6 +28,7 @@
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 #define LIGHT_IMG_SOURCE "./resources/light.png"
 #define PLAYER_WALKING_SOURCE "./resources/player/walk.png"
+#define MENU_BACKGROUND_IMG_SOURCE "./resources/menuBackground2.jpg"
 
 
 #define WALKING_SOUND "./audio/SFX/player/walking.ogg"
@@ -35,7 +36,9 @@
 #define PLAYER_KILLED_SOUND "./audio/SFX/player/killed.wav"
 #define ENEMY_SHOOTING_SOUND "./audio/SFX/enemy/shooting.wav"
 #define END_GAME "./audio/SFX/player/endgame.wav"
-
+#define CLICK_SOUND_PATH "./audio/SFX/menu/click.wav"
+#define CONFIRM_SOUND_PATH "./audio/SFX/menu/confirm.wav"
+#define DENY_SOUND_PATH "./audio/SFX/menu/deny.wav"
 
 
 #define BACKGROUND_IMG_W 64

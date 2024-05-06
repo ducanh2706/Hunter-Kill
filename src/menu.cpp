@@ -2,6 +2,7 @@
 
 Menu::Menu(const MainWindow& _mainWindow):
     mainWindow(_mainWindow),
+    hunterKillRed{_mainWindow.getRenderer()},
     startGreen{_mainWindow.getRenderer()},
     startWhite{_mainWindow.getRenderer()},
     quitGreen{_mainWindow.getRenderer()},
@@ -24,15 +25,22 @@ Menu::Menu(const MainWindow& _mainWindow):
  }
 
 void Menu::init(){
+    clickSound.load(CLICK_SOUND_PATH);
+    confirmSound.load(CONFIRM_SOUND_PATH);
+    denySound.load(DENY_SOUND_PATH);
+
     bigFont.load(FONT_PATH, BIG_FONT);
     smallFont.load(FONT_PATH, SMALL_FONT);
     SDL_Color greenCol = {0, 0xFF, 0, 0xFF};
     SDL_Color whiteCol = {0xFF, 0xFF, 0xFF, 0xFF};
+    SDL_Color redCol = {0xFF, 0, 0, 0xFF};
 
     useMusic = true;
     useSFX = true;
     choosenLevel = 0;
-
+    background = new Texture(mainWindow.getRenderer());
+    background->loadFromFile(MENU_BACKGROUND_IMG_SOURCE);
+    hunterKillRed.loadFromRenderedText("HUNTER KILL", bigFont, redCol);
     startGreen.loadFromRenderedText("START", bigFont, greenCol);
     startWhite.loadFromRenderedText("START", bigFont, whiteCol);
     quitGreen.loadFromRenderedText("QUIT", bigFont, greenCol);
@@ -104,11 +112,13 @@ void Menu::logic(Input &input, State &state){
             currentChoosen = &((*currentItems).front());
             SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_DOWN]){
+            clickSound.play();
             state.generalState = static_cast<GeneralState>((static_cast<int>(state.generalState) + 1) % 2);
             currentChoosen = &((*currentItems)[state.generalState]);
             SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
+            clickSound.play();
             state.generalState = static_cast<GeneralState>((static_cast<int>(state.generalState) - 1 + 2) % 2);
             currentChoosen = &((*currentItems)[state.generalState]);
             SDL_Delay(200);
@@ -123,34 +133,39 @@ void Menu::logic(Input &input, State &state){
             currentChoosen = &((*currentItems).front());
             SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_DOWN]){
+            clickSound.play();
             state.levelState = static_cast<LevelState>((static_cast<int>(state.levelState) + 1) % 3);
             currentChoosen = &((*currentItems)[state.levelState]);
             SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
+            clickSound.play();
             state.levelState = static_cast<LevelState>((static_cast<int>(state.levelState) - 1 + 3) % 3);
             currentChoosen = &((*currentItems)[state.levelState]);
             SDL_Delay(200);
         }
     } else{
         if (input.keyboard[SDL_SCANCODE_RETURN]){
-            // game state change from menu -> playing
             state.gameState = GameState::PLAYING;
         } else if (input.keyboard[SDL_SCANCODE_V]){
+            confirmSound.play();
             if (state.settingState == SettingState::MUSIC) useMusic = true;
             else useSFX = true;
             SDL_Delay(200);
         } else if (input.keyboard[SDL_SCANCODE_X]){
+            denySound.play();
             if (state.settingState == SettingState::MUSIC) useMusic = false;
             else useSFX = false;
             SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_DOWN]){
+            clickSound.play();
             state.settingState = static_cast<SettingState>((static_cast<int>(state.settingState) + 1) % 2);
             currentChoosen = &((*currentItems)[state.settingState]);
             SDL_Delay(200);
         }
         else if (input.keyboard[SDL_SCANCODE_UP]){
+            clickSound.play();
             state.settingState = static_cast<SettingState>((static_cast<int>(state.settingState) - 1 + 2) % 2);
             currentChoosen = &((*currentItems)[state.settingState]);
             SDL_Delay(200);
@@ -160,35 +175,44 @@ void Menu::logic(Input &input, State &state){
 }
 
 void Menu::render(State &state){
-    int idx = 1;
+    SDL_Rect screenBackgroundRender = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    background->blit(&screenBackgroundRender);
+
+    hunterKillRed.render(SCREEN_WIDTH / 2 - hunterKillRed.getWidth() / 2, SCREEN_HEIGHT / 2 - hunterKillRed.getHeight() / 2 - 100);  
+
+    #define BUTTON_X 500
+    #define POS_X 550
+    #define POS_Y 300
+    #define MARGIN_Y 50
 
     if (state.menuState == MenuState::SETTINGS){
-        if (useMusic) vGreen.render(50, 100);
-        else xGreen.render(50, 100);
+        if (useMusic) vGreen.render(BUTTON_X, POS_Y + MARGIN_Y);
+        else xGreen.render(BUTTON_X, POS_Y + MARGIN_Y);
 
-        if (useSFX) vGreen.render(50, 150);
-        else xGreen.render(50, 150);
+        if (useSFX) vGreen.render(BUTTON_X, POS_Y + MARGIN_Y * 2);
+        else xGreen.render(BUTTON_X, POS_Y + MARGIN_Y * 2);
         
         if (state.settingState == SettingState::MUSIC){
-            musicGreen.render(100, 100);
-            SFXWhite.render(100, 150);
+            musicGreen.render(POS_X, POS_Y + MARGIN_Y);
+            SFXWhite.render(POS_X, POS_Y + MARGIN_Y * 2);
         } else{
-            musicWhite.render(100, 100);
-            SFXGreen.render(100, 150);
+            musicWhite.render(POS_X, POS_Y + MARGIN_Y);
+            SFXGreen.render(POS_X, POS_Y + MARGIN_Y * 2);
         }
         return;
 
     }
 
+    int index = 1;
     for (auto &v : *currentItems){
         if (&v == &(*currentChoosen)){
-            choosenGreen.render(50, 100 + 50 * idx);
-            v[0]->render(100, 100 + 50 * idx);
+            choosenGreen.render(BUTTON_X, POS_Y + MARGIN_Y * index);
+            v[0]->render(POS_X, POS_Y + MARGIN_Y * index);
         }
         else{
-            v[1]->render(100, 100 + 50 * idx);
+            v[1]->render(POS_X, POS_Y + MARGIN_Y * index);
         }
-        ++idx;
+        index++;
     }
 
 }

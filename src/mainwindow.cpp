@@ -37,7 +37,7 @@ MainWindow::MainWindow(int w, int h, const string& title)
 
     SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
-    res = IMG_INIT_PNG;
+    res = IMG_INIT_PNG | IMG_INIT_JPG;
     if( !( IMG_Init( res ) & res ) ) {
         logErrorAndExit("SDL_image could not initialize! SDL_image Error: ", IMG_GetError());
     }

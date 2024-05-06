@@ -6,8 +6,8 @@
 #include "texture.h"
 #include "mainwindow.h"
 #include "inputs.h"
+#include "music.h"
 #include "state.h"
-
 #include <SDL2/SDL.h>
 
 
@@ -24,7 +24,9 @@ using std::endl;
 class Menu {
 private:
     const MainWindow &mainWindow;
+    Texture *background;
     Font bigFont, smallFont;
+    Texture hunterKillRed;
     Texture startGreen, startWhite;
     Texture quitGreen, quitWhite;
     Texture choosenGreen, choosenWhite;
@@ -34,6 +36,9 @@ private:
     Texture musicGreen, musicWhite;
     Texture SFXGreen, SFXWhite;
     Texture xGreen, vGreen;
+
+
+    Sound clickSound, confirmSound, denySound;
 
     vector<vector<Texture*>> generalItems;
     vector<vector<Texture*>> levelItems;

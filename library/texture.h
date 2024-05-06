@@ -19,12 +19,15 @@ public:
     void setColor( Uint8 red, Uint8 green, Uint8 blue );
     void setBlendMode( SDL_BlendMode blending );
     void setAlpha( Uint8 alpha );
+    void setWidth(int width);
+    void setHeight(int height);
     void render( int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE );
     void blit(SDL_Rect* dst, SDL_Rect *src = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
     int getWidth() const {return mWidth; }
     int getHeight() const {return mHeight;}
+    SDL_Texture* getTexture() const {return mTexture;}
 
-public:
+private:
     SDL_Texture* mTexture;
     SDL_Renderer* gRenderer;
 
