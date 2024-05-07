@@ -1,14 +1,16 @@
 #include "../library/game.h"
 
-Game::Game(const MainWindow &_mainWindow): 
+Game::Game(const MainWindow &_mainWindow, State &state): 
     level(1), 
     mainWindow(_mainWindow),
+    currentState(state),
     playerTexture{_mainWindow.getRenderer()},
     enemyTexture{_mainWindow.getRenderer()},
     backgroundTexture{_mainWindow.getRenderer()},
     bulletTexture{_mainWindow.getRenderer()},
     lightTexture{_mainWindow.getRenderer()},
     playerWalkingSprite{_mainWindow.getRenderer()}
+
     {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +52,7 @@ void Game::initPlayer() {
     player->health = PLAYER_INITIAL_HEALTH;
     player->w = PLAYER_IMG_W;
     player->h = PLAYER_IMG_H;
+    killedEnemies = 0;
 }
 
 
@@ -234,7 +237,7 @@ void Game::doKill() {
         if (player->collide(b)) {
             delete b;
             enemies.erase(temp);
-            cout << "?" << endl;
+            killedEnemies++;
             enemyKilled.play();
             // Alert there is an enemy killed in the region
             /*
@@ -242,6 +245,9 @@ void Game::doKill() {
                 2. All of enemy gonna go to that region using A* algorithm
             */
         }
+    }
+    if (enemies.size() == 0){
+        currentState.gameState = GameState::WIN;
     }
 }
 
@@ -283,6 +289,9 @@ void Game::doBullet() {
             bullets.erase(temp);
         }
     }
+    if (player->health <= 0){
+        currentState.gameState = GameState::LOSE;
+    }
 }
 
 void Game::doLogic(int *keyboard) {
@@ -302,13 +311,12 @@ void Game::drawBackground() {
 
 void Game::drawPlayer() {
     
-    if (player->health) {
+    if (player->health > 0) {
         SDL_Rect dest;
         dest.x = player->x;
         dest.y = player->y;
         dest.w = PLAYER_IMG_W;
         dest.h = PLAYER_IMG_H;
-        // player->texture->blit(&dest);
         player->sprite->tick();
         player->sprite->render(player->x, player->y);
     }
@@ -347,16 +355,17 @@ void Game::drawBullet() {
 void Game::drawScoreboard() {
     Texture scoreboard(mainWindow.getRenderer());
     Texture health(mainWindow.getRenderer());
+
+    SDL_Color redColor = {0xFF, 0, 0, 0xFF};
     
-    scoreboard.loadFromRenderedText("Score: " + std::to_string(killedEnemies), mFont, {0, 0, 0});
+    scoreboard.loadFromRenderedText("Score: " + std::to_string(killedEnemies), mFont, redColor);
     scoreboard.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 0);
 
-    health.loadFromRenderedText("Health: " + std::to_string(player->health), mFont, {0, 0, 0});
+    health.loadFromRenderedText("Health: " + std::to_string(player->health), mFont, redColor);
     health.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 30);
 }
 
 void Game::doDraw() {
-    // if (player->health <= 0) exit(0);
     drawBackground();
     drawScoreboard();
     drawPlayer();

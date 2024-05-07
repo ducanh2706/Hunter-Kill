@@ -8,6 +8,7 @@
 #include "inputs.h"
 #include "music.h"
 #include "state.h"
+#include "game.h"
 #include <SDL2/SDL.h>
 
 
@@ -36,6 +37,8 @@ private:
     Texture musicGreen, musicWhite;
     Texture SFXGreen, SFXWhite;
     Texture xGreen, vGreen;
+    Texture youWinGreen, youLoseRed;
+    Texture playAgainWhite, playAgainGreen;
 
 
     Sound clickSound, confirmSound, denySound;
@@ -55,8 +58,10 @@ public:
     Menu(const MainWindow& _mainWindow);
     void init();
     void render(State &state);
+    void renderEnd(State &state);
 
     void logic(Input &input, State &state);
+    void logicEnd(Input &input, State &state, Game &game);
 
 };
 

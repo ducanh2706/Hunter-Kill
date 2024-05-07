@@ -20,7 +20,11 @@ Menu::Menu(const MainWindow& _mainWindow):
     SFXGreen{_mainWindow.getRenderer()},
     SFXWhite{_mainWindow.getRenderer()},
     xGreen(_mainWindow.getRenderer()),
-    vGreen(_mainWindow.getRenderer())
+    vGreen(_mainWindow.getRenderer()),
+    youWinGreen(_mainWindow.getRenderer()),
+    youLoseRed(_mainWindow.getRenderer()),
+    playAgainGreen(_mainWindow.getRenderer()),
+    playAgainWhite(_mainWindow.getRenderer())
  {
  }
 
@@ -59,6 +63,10 @@ void Menu::init(){
     SFXWhite.loadFromRenderedText("SFX", bigFont, whiteCol);
     xGreen.loadFromRenderedText("x", bigFont, greenCol);
     vGreen.loadFromRenderedText("v", bigFont, greenCol);
+    youWinGreen.loadFromRenderedText("YOU WIN !!!", bigFont, greenCol);
+    youLoseRed.loadFromRenderedText("YOU LOSE !!!", bigFont, redCol);
+    playAgainGreen.loadFromRenderedText("AGAIN", bigFont, greenCol);
+    playAgainWhite.loadFromRenderedText("AGAIN", bigFont, whiteCol);
 
 
     vector<Texture*> start;
@@ -174,16 +182,54 @@ void Menu::logic(Input &input, State &state){
     
 }
 
+void Menu::logicEnd(Input &input, State &state, Game &game){
+    if (input.keyboard[SDL_SCANCODE_RETURN]){
+        if (state.endState == EndState::QUIT_GAME) exit(0);
+        state.gameState = GameState::PLAYING;
+        game.init();
+    } else if (input.keyboard[SDL_SCANCODE_UP]){
+        clickSound.play();
+        state.endState = static_cast<EndState>((static_cast<int>(state.endState) - 1 + 2) % 2);
+        SDL_Delay(200);
+    } else if (input.keyboard[SDL_SCANCODE_DOWN]){
+        clickSound.play();
+        state.endState = static_cast<EndState>((static_cast<int>(state.endState) + 1) % 2);
+        SDL_Delay(200);
+    }
+}
+
+#define BUTTON_X 500
+#define POS_X 550
+#define POS_Y 300
+#define MARGIN_Y 50
+
+void Menu::renderEnd(State &state){
+    SDL_Rect screenBackgroundRender = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    background->blit(&screenBackgroundRender);
+
+    if (state.gameState == GameState::WIN){
+        youWinGreen.render(SCREEN_WIDTH / 2 - youWinGreen.getWidth() / 2, SCREEN_HEIGHT / 2 - youWinGreen.getHeight() / 2 - 100);
+    } else{
+        youLoseRed.render(SCREEN_WIDTH / 2 - youLoseRed.getWidth() / 2, SCREEN_HEIGHT / 2 - youLoseRed.getHeight() / 2 - 100);
+    }
+
+    if (state.endState == EndState::PLAY_AGAIN){
+        choosenGreen.render(BUTTON_X, POS_Y + MARGIN_Y);
+        playAgainGreen.render(POS_X, POS_Y + MARGIN_Y);
+        quitWhite.render(POS_X, POS_Y + MARGIN_Y * 2);
+    } else{
+        playAgainWhite.render(POS_X, POS_Y + MARGIN_Y);
+        choosenGreen.render(BUTTON_X, POS_Y + MARGIN_Y * 2);
+        quitGreen.render(POS_X, POS_Y + MARGIN_Y * 2);
+    }
+}
+
 void Menu::render(State &state){
     SDL_Rect screenBackgroundRender = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     background->blit(&screenBackgroundRender);
 
     hunterKillRed.render(SCREEN_WIDTH / 2 - hunterKillRed.getWidth() / 2, SCREEN_HEIGHT / 2 - hunterKillRed.getHeight() / 2 - 100);  
 
-    #define BUTTON_X 500
-    #define POS_X 550
-    #define POS_Y 300
-    #define MARGIN_Y 50
 
     if (state.menuState == MenuState::SETTINGS){
         if (useMusic) vGreen.render(BUTTON_X, POS_Y + MARGIN_Y);

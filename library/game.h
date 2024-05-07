@@ -17,6 +17,7 @@
 #include "texture.h"
 #include "font.h"
 #include "music.h"
+#include "state.h"
 
 #include "Maths/random.h"
 #include "Maths/vector2.h"
@@ -34,6 +35,7 @@ using std::endl;
 class Game {
 public:
     const MainWindow &mainWindow;
+    State &currentState;
     Level level;
     Entity *player;
     std::list<Enemy*> enemies;
@@ -57,7 +59,7 @@ public:
     Sprite playerWalkingSprite;
 
 
-    Game(const MainWindow &_mainWindow);
+    Game(const MainWindow &_mainWindow, State &state);
 
     void initSound();
     void initFont();

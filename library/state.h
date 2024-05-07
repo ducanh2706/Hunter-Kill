@@ -26,7 +26,15 @@ enum GeneralState {
 enum GameState {
     MENU,
     PLAYING,
+    WIN,
+    LOSE
 };
+
+enum EndState {
+    PLAY_AGAIN,
+    QUIT_GAME
+};
+
 
 class State {
 public:
@@ -35,8 +43,9 @@ public:
     SettingState settingState;
     GeneralState generalState;
     GameState gameState;
+    EndState endState;
 
-    State(): menuState(MenuState::GENERAL), levelState(LevelState::EASY), settingState(SettingState::MUSIC), generalState(GeneralState::START), gameState(GameState::MENU) {}
+    State(): menuState(MenuState::GENERAL), levelState(LevelState::EASY), settingState(SettingState::MUSIC), generalState(GeneralState::START), gameState(GameState::MENU), endState(EndState::PLAY_AGAIN) {}
 };
 
 #endif
