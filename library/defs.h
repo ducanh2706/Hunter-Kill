@@ -27,7 +27,9 @@
 #define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 #define LIGHT_IMG_SOURCE "./resources/light.png"
-#define PLAYER_WALKING_SOURCE "./resources/player/walk.png"
+#define PLAYER_SWORD_IMG_SOURCE "./resources/player/weapon_sword_1.png"
+#define PLAYER_WALKING_SOURCE "./resources/player/knight_run_spritesheet.png"
+#define PLAYER_SWORD_EFFECT_SOURCE "./resources/player/slash.png"
 #define MENU_BACKGROUND_IMG_SOURCE "./resources/menuBackground2.jpg"
 
 

@@ -9,7 +9,9 @@ Game::Game(const MainWindow &_mainWindow, State &state):
     backgroundTexture{_mainWindow.getRenderer()},
     bulletTexture{_mainWindow.getRenderer()},
     lightTexture{_mainWindow.getRenderer()},
-    playerWalkingSprite{_mainWindow.getRenderer()}
+    playerWalkingSprite{_mainWindow.getRenderer()},
+    swordTexture{_mainWindow.getRenderer()},
+    swordEffect{_mainWindow.getRenderer()}
 
     {}
 
@@ -72,7 +74,8 @@ void Game::initEnemy() {
             enemy->texture = &enemyTexture;
             enemy->side = ENEMY_SIDE;
             enemy->isWandering = 0;
-            enemy->health = 1;
+            enemy->killed = false;
+            enemy->health = 3;
             enemy->tSeek = 0;
             enemy->reload = 0;
             enemy->inRec = i;
@@ -100,7 +103,10 @@ void Game::initTexture() {
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
     playerWalkingSprite.loadFromFile(PLAYER_WALKING_SOURCE);
-    playerWalkingSprite.init(0, 24, 256, 256, 64, 64);
+    playerWalkingSprite.init(0, 6, 16, 16, 32, 32, 10);
+    swordTexture.loadFromFile(PLAYER_SWORD_IMG_SOURCE);
+    swordEffect.loadFromFile(PLAYER_SWORD_EFFECT_SOURCE);
+    swordEffect.init(0, 3, 16, 16, 16, 16, 5);
     lightTexture.loadFromFile(LIGHT_IMG_SOURCE);
     lightTexture.setAlpha(128);
 }
@@ -163,6 +169,7 @@ void Game::doPlayer(int* keyboard) {
 
 void Game::doEnemy() {
     for (auto &enemy : enemies) {
+        if (enemy->killed) continue;
         if (enemy->inRange(player, IN_RADIUS)){
             /// @note: IN RANGE nhưng phải nhìn thấy mà không có vật cản -> check ray cast
             bool check = true;
@@ -234,16 +241,24 @@ void Game::doKill() {
     while (ins != enemies.end()) {
         auto temp = ins++;
         Enemy *b = *temp;
-        if (player->collide(b)) {
-            delete b;
-            enemies.erase(temp);
+        if (!b->killed && player->collide(b)) {
             killedEnemies++;
             enemyKilled.play();
+            b->health = 10;
+            b->killed = true;
+            if (swordSlash <= 0) swordSlash = 15;
             // Alert there is an enemy killed in the region
             /*
                 1. Check where is that region
                 2. All of enemy gonna go to that region using A* algorithm
             */
+        } else if (b->killed && b->health > 0){
+            b->health--;
+    
+        } else if (b->killed && b->health == 0){
+            delete b;
+            enemies.erase(temp);
+            b->health--;
         }
     }
     if (enemies.size() == 0){
@@ -319,6 +334,13 @@ void Game::drawPlayer() {
         dest.h = PLAYER_IMG_H;
         player->sprite->tick();
         player->sprite->render(player->x, player->y);
+        swordTexture.render(player->x + player->w - 10, player->y + player->h / 2 - 10);
+        if (swordSlash > 0){
+            cout << "? " << endl;
+            swordEffect.tick();
+            swordEffect.render(player->x + player->w, player->y + player->h / 2 - 10);
+            swordSlash--;
+        }
     }
 }
 

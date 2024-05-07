@@ -48,6 +48,7 @@ public:
     RandomGenerator random;
     Font mFont;
     int killedEnemies = 0;
+    int swordSlash = 0;
 
 
     static const int ENEMIES_NUMBER = 1;
@@ -56,7 +57,11 @@ public:
 
     Texture playerTexture, enemyTexture, backgroundTexture, bulletTexture;
     Texture lightTexture;
+    Texture swordTexture;
     Sprite playerWalkingSprite;
+    Sprite swordEffect;
+
+
 
 
     Game(const MainWindow &_mainWindow, State &state);

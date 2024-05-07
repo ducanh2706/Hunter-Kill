@@ -48,6 +48,7 @@ public:
     int isChasing;
     int tSeek;
     int isWandering;
+    bool killed;
     Vector2 isWanderingTo;
     vector<pair<int, int>> path;
     ContextSolver solver;

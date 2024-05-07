@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 
 
-void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight) {
+void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight, int pauseTime) {
     cout << "hello" << endl;
     mFrames = frames;
     mFrameWidth = frameWidth;
@@ -26,11 +26,19 @@ void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int re
     mRenderWidth = renderWidth;
     mRenderHeight = renderHeight;
     mCurrentClip = {0, initY, mFrameWidth, mFrameHeight};
+    mPauseTime = pauseTime;
+    mTime = 1;
     cout << mCurrentClip.x << " " << mFrameWidth << " " << mFrames << endl;
 }
 
 
 void Sprite::tick() {
+    mTime--;
+    if (mTime > 0) {
+        return;
+    }
+    mTime = mPauseTime;
+    
     mCurrentClip.x += mFrameWidth;
     if (mCurrentClip.x >= mFrameWidth * mFrames) {
         mCurrentClip.x = 0;

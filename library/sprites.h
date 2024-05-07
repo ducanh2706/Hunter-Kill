@@ -14,13 +14,15 @@ private:
     int mFrameWidth, mFrameHeight;
     int mRenderWidth, mRenderHeight;
     SDL_Rect mCurrentClip;
+    int mPauseTime;
+    int mTime;
 
 public:
     Sprite(SDL_Renderer* renderer);
     ~Sprite();
 
     void loadFromFile(const string &path);
-    void init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight);
+    void init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight, int pauseTime);
     void tick();
     void render(int x, int y);
     const SDL_Rect* getCurrentClip() const;
