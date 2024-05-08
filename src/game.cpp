@@ -42,8 +42,8 @@ void Game::initPlayer() {
     player->w = PLAYER_IMG_W;
     player->h = PLAYER_IMG_H;
     do {
-        player->x = random.randInt(0, 39) * TILE_SIZE;
-        player->y = random.randInt(0, 23) * TILE_SIZE;
+        player->x = random.randInt(0, X_TILE_SIZE - 1) * TILE_SIZE;
+        player->y = random.randInt(0, Y_TILE_SIZE - 1) * TILE_SIZE;
     } while (
         checkCollision(player)
     );
@@ -75,8 +75,7 @@ void Game::initEnemy() {
             enemy->side = ENEMY_SIDE;
             enemy->isWandering = 0;
             enemy->killed = false;
-            enemy->health = 3;
-            enemy->tSeek = 0;
+            enemy->health = ENEMY_INITIAL_HEALTH;
             enemy->reload = 0;
             enemy->inRec = i;
             enemy->isChasing = false;
@@ -103,21 +102,18 @@ void Game::initTexture() {
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
     playerWalkingSprite.loadFromFile(PLAYER_WALKING_SOURCE);
-    playerWalkingSprite.init(0, 6, 16, 16, 32, 32, 10);
+    playerWalkingSprite.init(0, NUM_PLAYER_WALKING_SPRITE, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, DELAY_PLAYER_WALKING_SPRITE);
     swordTexture.loadFromFile(PLAYER_SWORD_IMG_SOURCE);
     swordEffect.loadFromFile(PLAYER_SWORD_EFFECT_SOURCE);
-    swordEffect.init(0, 3, 16, 16, 16, 16, 5);
+    swordEffect.init(0, NUM_SWORD_EFFECT_SPRITE, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, DELAY_SWORD_EFFECT_SPRITE);
     lightTexture.loadFromFile(LIGHT_IMG_SOURCE);
-    lightTexture.setAlpha(128);
+    lightTexture.setAlpha(LIGHT_TEXTURE_OPACITY);
 }
 
 void Game::initSound() {
     playerWalking.load(WALKING_SOUND);
-    // playerKilled.load(PLAYER_KILLED_SOUND);
     enemyShooting.load(ENEMY_SHOOTING_SOUND);
     enemyKilled.load(ENEMY_KILLED_SOUND);
-    // endGame.load(END_GAME);
-
 }
 
 void Game::initFont() {
@@ -162,9 +158,6 @@ void Game::doPlayer(int* keyboard) {
             break;
         }
     }
-    if (player->x != prev_x || player->y != prev_y) {
-        // playerWalking.play();
-    }
 }
 
 void Game::doEnemy() {
@@ -186,7 +179,6 @@ void Game::doEnemy() {
         }
 
         if (enemy->inRange(player, OUT_RADIUS) || --enemy->isChasing >= 0){
-            // cout << "Ô vcl luôn" << endl;
             bool reached = enemySeek(enemy, Vector2(player->x, player->y), OUT_RADIUS, false);
             if (!reached)
                 enemy->isChasing = FPS;
@@ -200,8 +192,8 @@ void Game::doEnemy() {
                 if (random.randInt(0, 1) == 0){
                     Entity *nEntity = new Entity();
                     do {
-                        double x = random.randFloat(-100.0, 100.0);
-                        double y = random.randFloat(-sqrt(10000 - x * x), sqrt(10000 - x * x));
+                        double x = random.randFloat(-RANGE_ENEMY_WANDER, RANGE_ENEMY_WANDER);
+                        double y = random.randFloat(-sqrt(RANGE_ENEMY_WANDER * RANGE_ENEMY_WANDER - x * x), sqrt(RANGE_ENEMY_WANDER * RANGE_ENEMY_WANDER - x * x));
                         nEntity->x = enemy->x + x;
                         nEntity->y = enemy->y + y;
                         
@@ -244,7 +236,6 @@ void Game::doKill() {
         if (!b->killed && player->collide(b)) {
             killedEnemies++;
             enemyKilled.play();
-            b->health = 10;
             b->killed = true;
             if (swordSlash <= 0) swordSlash = 15;
             // Alert there is an enemy killed in the region
@@ -283,7 +274,7 @@ void Game::fireBullet(Enemy *enemy) {
     bullet->dx *= BULLET_SPEED;
     bullet->dy *= BULLET_SPEED;
 
-    enemy->reload = FPS / 3;
+    enemy->reload = FPS / 2; // 0.5s to fire one bullet
 }
 
 void Game::doBullet() {
@@ -334,11 +325,10 @@ void Game::drawPlayer() {
         dest.h = PLAYER_IMG_H;
         player->sprite->tick();
         player->sprite->render(player->x, player->y);
-        swordTexture.render(player->x + player->w - 10, player->y + player->h / 2 - 10);
+        swordTexture.render(player->x + player->w - SWORD_MARGIN_X, player->y + player->h / 2 - SWORD_MARGIN_Y);
         if (swordSlash > 0){
-            cout << "? " << endl;
             swordEffect.tick();
-            swordEffect.render(player->x + player->w, player->y + player->h / 2 - 10);
+            swordEffect.render(player->x + player->w, player->y + player->h / 2 - SWORD_MARGIN_Y);
             swordSlash--;
         }
     }
@@ -354,17 +344,16 @@ void Game::drawEnemy() {
         enemy->texture->blit(&dest);
         
 
-        dest.x = enemy->x + 16;
-        dest.y = enemy->y - 16;
-        dest.w = 64;
-        dest.h = 64;
+        dest.x = enemy->x + LIGHT_MARGIN_X;
+        dest.y = enemy->y - LIGHT_MARGIN_Y;
+        dest.w = LIGHT_IMG_W;
+        dest.h = LIGHT_IMG_H;
 
         double angle = atan2(enemy->dy, enemy->dx);
         angle = angle * 180 / PI;
 
-        SDL_Point *point = new SDL_Point{0, 32};
+        SDL_Point *point = new SDL_Point{MIDDLE_LIGHT_X, MIDDLE_LIGHT_Y};
         lightTexture.blit(&dest, nullptr, angle, point);
-        /// @note: Cần vẽ thêm hình bán nguyệt thể hiện tầm bắn hiện tại
     }
 }
 
@@ -381,10 +370,10 @@ void Game::drawScoreboard() {
     SDL_Color redColor = {0xFF, 0, 0, 0xFF};
     
     scoreboard.loadFromRenderedText("Score: " + std::to_string(killedEnemies), mFont, redColor);
-    scoreboard.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 0);
+    scoreboard.render(SCREEN_WIDTH - scoreboard.getWidth() - SCORE_BOARD_MARGIN_X, SCORE_Y);
 
     health.loadFromRenderedText("Health: " + std::to_string(player->health), mFont, redColor);
-    health.render(SCREEN_WIDTH - scoreboard.getWidth() - 50, 30);
+    health.render(SCREEN_WIDTH - scoreboard.getWidth() - SCORE_BOARD_MARGIN_X, HEALTH_Y);
 }
 
 void Game::doDraw() {
@@ -419,7 +408,7 @@ bool Game::enemySeek(Enemy *enemy, Vector2 seekingPosition, double detectionRadi
     
     obstacleAvoidance.getSteering(danger, interest, Vector2(enemy->x, enemy->y), detectedObstacles);
     double dis = (Vector2(enemy->x, enemy->y) - seekingPosition).length();
-    targetSeek.getSteering(danger, interest, detectedObstacles, Vector2(enemy->x, enemy->y), seekingPosition, targetDetected || (isWandering && dis > 96));
+    targetSeek.getSteering(danger, interest, detectedObstacles, Vector2(enemy->x, enemy->y), seekingPosition, targetDetected || (isWandering && dis > IGNORE_DISTANCE));
     if (targetSeek.reachLastTarget) return true;
 
     Vector2 direction = solver.GetDirectionToMove(danger, interest);

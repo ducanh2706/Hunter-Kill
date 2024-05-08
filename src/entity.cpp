@@ -14,9 +14,6 @@ Entity::Entity() {
 
         texture = NULL;
         rect = NULL;
-
-        // changeSide = 120;
-
 }
 
 bool Entity::collide(const Entity *other) const {

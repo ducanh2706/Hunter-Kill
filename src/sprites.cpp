@@ -19,7 +19,6 @@ using std::endl;
 
 
 void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight, int pauseTime) {
-    cout << "hello" << endl;
     mFrames = frames;
     mFrameWidth = frameWidth;
     mFrameHeight = frameHeight;
@@ -28,7 +27,6 @@ void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int re
     mCurrentClip = {0, initY, mFrameWidth, mFrameHeight};
     mPauseTime = pauseTime;
     mTime = 1;
-    cout << mCurrentClip.x << " " << mFrameWidth << " " << mFrames << endl;
 }
 
 
