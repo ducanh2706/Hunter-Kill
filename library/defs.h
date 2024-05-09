@@ -24,16 +24,14 @@
 #define MAP_SIZE_X 2000
 #define MAP_SIZE_Y 2000
 
-#define PLAYER_IMG_SOURCE "./resources/Gunner.png"
-#define ENEMY_IMG_SOURCE "./resources/Opponent.png"
 #define BACKGROUND_IMG_SOURCE "./resources/map.png"
 #define BULLET_IMG_SOURCE "./resources/Bullet.png"
 #define LIGHT_IMG_SOURCE "./resources/light.png"
-#define PLAYER_SWORD_IMG_SOURCE "./resources/player/weapon_sword_1.png"
-#define PLAYER_WALKING_SOURCE "./resources/player/knight_run_spritesheet.png"
+#define PLAYER_SWORD_IMG_SOURCE "./resources/player/sword.png"
+#define PLAYER_WALKING_SOURCE "./resources/player/knight.png"
 #define PLAYER_SWORD_EFFECT_SOURCE "./resources/player/slash.png"
-#define MENU_BACKGROUND_IMG_SOURCE "./resources/menuBackground2.jpg"
-#define ENEMY_WALKING_SOURCE "./resources/Enemy/sprite2.png"
+#define MENU_BACKGROUND_IMG_SOURCE "./resources/menuBackground.jpg"
+#define ENEMY_WALKING_SOURCE "./resources/Enemy/enemy.png"
 
 
 #define WALKING_SOUND "./audio/SFX/player/walking.ogg"

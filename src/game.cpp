@@ -105,8 +105,6 @@ void Game::initBackground() {
 
 
 void Game::initTexture() {
-    playerTexture.loadFromFile(PLAYER_IMG_SOURCE);
-    enemyTexture.loadFromFile(ENEMY_IMG_SOURCE);
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
     playerWalkingSprite.loadFromFile(PLAYER_WALKING_SOURCE);
