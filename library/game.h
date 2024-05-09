@@ -63,7 +63,6 @@ public:
 
 
     Game(const MainWindow &_mainWindow, State &state);
-    ~Game();
 
     void initSound();
     void initFont();
