@@ -1,7 +1,7 @@
 #include "../library/game.h"
 
 Game::Game(const MainWindow &_mainWindow, State &state): 
-    level(1), 
+    level(), 
     mainWindow(_mainWindow),
     currentState(state),
     playerTexture{_mainWindow.getRenderer()},
@@ -70,8 +70,12 @@ void Game::initEnemy() {
             } while (
                 checkCollision(enemy)
             );
+
             enemy->dx = enemy->dy = ENEMY_SPEED;
             enemy->texture = &enemyTexture;
+            enemy->sprite = new Sprite(mainWindow.getRenderer());
+            enemy->sprite->loadFromFile(ENEMY_WALKING_SOURCE);
+            enemy->sprite->init(0, NUM_ENEMY_WALKING_SPRITE, 16, ENEMY_WALKING_ORIGINAL_SPRITE_SIZE, ENEMY_WALKING_ORIGINAL_SPRITE_SIZE, ENEMY_WALKING_RENDER_SPRITE_SIZE, ENEMY_WALKING_RENDER_SPRITE_SIZE, DELAY_ENEMY_WALKING_SPRITE);
             enemy->side = ENEMY_SIDE;
             enemy->isWandering = 0;
             enemy->killed = false;
@@ -79,6 +83,10 @@ void Game::initEnemy() {
             enemy->reload = 0;
             enemy->inRec = i;
             enemy->isChasing = false;
+            
+
+
+            // AI Init
             enemy->solver = ContextSolver();
             enemy->obstacleAvoidance = ObstacleAvoidance();
             enemy->obstacleDetector = ObstacleDetector();
@@ -102,10 +110,10 @@ void Game::initTexture() {
     backgroundTexture.loadFromFile(BACKGROUND_IMG_SOURCE);
     bulletTexture.loadFromFile(BULLET_IMG_SOURCE);
     playerWalkingSprite.loadFromFile(PLAYER_WALKING_SOURCE);
-    playerWalkingSprite.init(0, NUM_PLAYER_WALKING_SPRITE, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, DELAY_PLAYER_WALKING_SPRITE);
+    playerWalkingSprite.init(0, NUM_PLAYER_WALKING_SPRITE, 0, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_ORIGINAL_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, PLAYER_WALKING_RENDER_SPRITE_SIZE, DELAY_PLAYER_WALKING_SPRITE);
     swordTexture.loadFromFile(PLAYER_SWORD_IMG_SOURCE);
     swordEffect.loadFromFile(PLAYER_SWORD_EFFECT_SOURCE);
-    swordEffect.init(0, NUM_SWORD_EFFECT_SPRITE, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, DELAY_SWORD_EFFECT_SPRITE);
+    swordEffect.init(0, NUM_SWORD_EFFECT_SPRITE, 0, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_ORIGINAL_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, SWORD_EFFECT_RENDER_SPRITE_SIZE, DELAY_SWORD_EFFECT_SPRITE);
     lightTexture.loadFromFile(LIGHT_IMG_SOURCE);
     lightTexture.setAlpha(LIGHT_TEXTURE_OPACITY);
 }
@@ -237,12 +245,7 @@ void Game::doKill() {
             killedEnemies++;
             enemyKilled.play();
             b->killed = true;
-            if (swordSlash <= 0) swordSlash = 15;
-            // Alert there is an enemy killed in the region
-            /*
-                1. Check where is that region
-                2. All of enemy gonna go to that region using A* algorithm
-            */
+            if (swordSlash <= 0) swordSlash = NUM_SWORD_EFFECT_SPRITE * DELAY_SWORD_EFFECT_SPRITE;
         } else if (b->killed && b->health > 0){
             b->health--;
     
@@ -301,7 +304,6 @@ void Game::doBullet() {
 }
 
 void Game::doLogic(int *keyboard) {
-    // if (player->health <= 0) exit(0);
     doPlayer(keyboard);
     doEnemy();
     doKill();
@@ -318,6 +320,8 @@ void Game::drawBackground() {
 void Game::drawPlayer() {
     
     if (player->health > 0) {
+        // draw player entity
+
         SDL_Rect dest;
         dest.x = player->x;
         dest.y = player->y;
@@ -325,6 +329,8 @@ void Game::drawPlayer() {
         dest.h = PLAYER_IMG_H;
         player->sprite->tick();
         player->sprite->render(player->x, player->y);
+
+        // draw sword texture
         swordTexture.render(player->x + player->w - SWORD_MARGIN_X, player->y + player->h / 2 - SWORD_MARGIN_Y);
         if (swordSlash > 0){
             swordEffect.tick();
@@ -336,14 +342,16 @@ void Game::drawPlayer() {
 
 void Game::drawEnemy() {
     for (auto &enemy : enemies) {
+        // draw enemy entity
         SDL_Rect dest;
         dest.x = enemy->x;
         dest.y = enemy->y;
         dest.w = ENEMY_IMG_W;
         dest.h = ENEMY_IMG_H;
-        enemy->texture->blit(&dest);
+        enemy->sprite->tick();
+        enemy->sprite->render(enemy->x, enemy->y);
         
-
+        // draw light
         dest.x = enemy->x + LIGHT_MARGIN_X;
         dest.y = enemy->y - LIGHT_MARGIN_Y;
         dest.w = LIGHT_IMG_W;

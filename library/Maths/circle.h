@@ -9,8 +9,6 @@
 
 using std::min;
 using std::max;
-using std::cout;
-using std::endl;
 
 class Circle {
 public:

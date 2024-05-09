@@ -33,6 +33,7 @@
 #define PLAYER_WALKING_SOURCE "./resources/player/knight_run_spritesheet.png"
 #define PLAYER_SWORD_EFFECT_SOURCE "./resources/player/slash.png"
 #define MENU_BACKGROUND_IMG_SOURCE "./resources/menuBackground2.jpg"
+#define ENEMY_WALKING_SOURCE "./resources/Enemy/sprite2.png"
 
 
 #define WALKING_SOUND "./audio/SFX/player/walking.ogg"
@@ -73,6 +74,11 @@
 
 #define ENEMY_INITIAL_HEALTH 10
 
+#define NUM_ENEMY_WALKING_SPRITE 6
+#define ENEMY_WALKING_ORIGINAL_SPRITE_SIZE 32
+#define ENEMY_WALKING_RENDER_SPRITE_SIZE 32
+#define DELAY_ENEMY_WALKING_SPRITE 10
+
 #define PLAYER_WALKING_ORIGINAL_SPRITE_SIZE 16
 #define PLAYER_WALKING_RENDER_SPRITE_SIZE 32
 #define NUM_PLAYER_WALKING_SPRITE 6
@@ -102,6 +108,8 @@
 #define LIGHT_TEXTURE_OPACITY 128
 
 #define RANGE_ENEMY_WANDER 100.0
+
+#define NUM_OF_OBSTACLES 587
 
 #define IN_RADIUS 128
 #define OUT_RADIUS 256

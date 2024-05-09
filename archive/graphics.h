@@ -10,8 +10,6 @@
 #include "font.h"
 #include "defs.h"
 
-using std::cout;
-using std::endl;
 
 struct Graphics {
     SDL_Renderer *renderer;

@@ -18,9 +18,6 @@
 
 using std::list;
 using std::vector;
-using std::cout;
-using std::endl;
-
 
 class Menu {
 private:

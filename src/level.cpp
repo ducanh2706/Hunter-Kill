@@ -1,6 +1,6 @@
 #include "../library/level.h"
 
-Level::Level(int _level) {
+Level::Level() {
     numMaps = 8;
     maps.resize(8);
     maps = {
@@ -16,9 +16,6 @@ Level::Level(int _level) {
 
     numOfEnemies.resize(8);
     numOfEnemies = {2, 2, 2, 0, 2, 2, 0, 2};
-    // numOfEnemies = {1, 0, 0, 0, 0, 0, 0, 0};
-
-    obstacles.resize(66 + 275 + 246);
 
     obstacles = {
         Rectangle(2, 3, 2, 3),
@@ -609,19 +606,6 @@ Level::Level(int _level) {
         Rectangle(17, 23, 17, 23),
         Rectangle(18, 23, 18, 23),
     };
-
-    // isObstacle = vector<vector<bool>>(SCREEN_WIDTH + 1, vector<bool>(SCREEN_HEIGHT + 1, 0));
-
-    // for (auto &obstacle : obstacles) {
-    //     for (int i = obstacle.x; i <= obstacle.u; ++i) {
-    //         for (int j = obstacle.y; j <= obstacle.v; ++j) {
-    //             isObstacle[i][j] = 1;
-    //         }
-    //     }
-    // }
-
-    int enemyShootingRange = 10;
-
 }
 
 Level::Level(int _numMaps, vector<Rectangle> _maps, vector<Rectangle> _obstacles, vector<int> _numOfEnemies, int _enemyShootingRange) {

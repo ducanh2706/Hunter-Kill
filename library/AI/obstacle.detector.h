@@ -8,8 +8,6 @@
 #include "../Maths/vector2.h"
 #include "../Maths/circle.h"
 
-using std::cout;
-using std::endl;
 using std::vector;
 
 class ObstacleDetector {

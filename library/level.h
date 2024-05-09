@@ -21,7 +21,7 @@ public:
     
     int enemyShootingRange;
 
-    Level(int _level);
+    Level();
     Level(int _numsMaps, vector<Rectangle> _maps, vector<Rectangle> _obstacles, vector<int> _numOfEnemies, int _enemyShootingRange);
 };
 

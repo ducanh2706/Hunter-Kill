@@ -9,8 +9,6 @@
 #include "../Maths/vector2.h"
 #include "../Maths/8directions.h"
 
-using std::cout;
-using std::endl;
 class ObstacleAvoidance {
 private:
     double radius = 64;

@@ -13,17 +13,15 @@ void Sprite::loadFromFile(const string &path) {
     texture.loadFromFile(path);
 }
 
-#include <iostream>
-using std::cout;
-using std::endl;
 
 
-void Sprite::init(int initY, int frames, int frameWidth, int frameHeight, int renderWidth, int renderHeight, int pauseTime) {
+void Sprite::init(int initY, int frames, int gap, int frameWidth, int frameHeight, int renderWidth, int renderHeight, int pauseTime) {
     mFrames = frames;
     mFrameWidth = frameWidth;
     mFrameHeight = frameHeight;
     mRenderWidth = renderWidth;
     mRenderHeight = renderHeight;
+    mGap = gap;
     mCurrentClip = {0, initY, mFrameWidth, mFrameHeight};
     mPauseTime = pauseTime;
     mTime = 1;
@@ -37,8 +35,8 @@ void Sprite::tick() {
     }
     mTime = mPauseTime;
     
-    mCurrentClip.x += mFrameWidth;
-    if (mCurrentClip.x >= mFrameWidth * mFrames) {
+    mCurrentClip.x += mFrameWidth + mGap;
+    if (mCurrentClip.x >= mFrameWidth * mFrames + mGap * (mFrames - 1)) {
         mCurrentClip.x = 0;
     }
 }

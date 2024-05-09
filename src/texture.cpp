@@ -5,10 +5,6 @@
 #include "../library/exception.h"
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
-
 Texture::Texture(SDL_Renderer* renderer)
     : mTexture{nullptr},
       gRenderer{renderer},

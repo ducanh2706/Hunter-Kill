@@ -28,8 +28,6 @@
 #include "AI/target.detector.h"
 #include "AI/target.seek.h"
 
-using std::cout;
-using std::endl;
 
 
 class Game {
@@ -65,6 +63,7 @@ public:
 
 
     Game(const MainWindow &_mainWindow, State &state);
+    ~Game();
 
     void initSound();
     void initFont();
