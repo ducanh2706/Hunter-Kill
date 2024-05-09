@@ -9,8 +9,26 @@ Entity::Entity() {
         side = 0;
         health = 1;
 
-        texture = NULL;
-        rect = NULL;
+        texture = nullptr;
+        rect = nullptr;
+        sprite = nullptr;
+}
+
+Entity::~Entity() {
+    if (texture != nullptr) {
+        delete texture;
+        texture = nullptr;
+    }
+
+    if (rect != NULL) {
+        delete rect;
+        rect = nullptr;
+    }
+
+    if (sprite != NULL) {
+        delete sprite;
+        sprite = nullptr;
+    }
 }
 
 bool Entity::collide(const Entity *other) const {

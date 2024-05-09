@@ -35,6 +35,7 @@ public:
     Sprite *sprite;
 
     Entity();
+    ~Entity();
 
     bool collide(const Entity *other) const;
     bool collide(const Rectangle &other) const;
