@@ -1,7 +1,6 @@
 #include "../../library/AI/context.wandering.h"
 
 #include <iostream>
-using namespace std;
 
 Vector2 WanderingBehavior::getTarget(Vector2 position, Vector2 direction, RandomGenerator &random) {
     Vector2 circlePos = position + direction.normalize() * ringDistance;

@@ -11,6 +11,10 @@ Font::Font(string path, int sz) {
     load(path, sz);
 }
 
+Font::~Font(){
+    free();
+}
+
 TTF_Font* Font::getFont() const {
     return font;
 }

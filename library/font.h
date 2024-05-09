@@ -15,6 +15,7 @@ public:
 
     Font();
     Font(string path, int sz);
+    ~Font();
 
     TTF_Font* getFont() const;
     void load(string path, int sz);

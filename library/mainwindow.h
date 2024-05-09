@@ -5,7 +5,7 @@
 #include <SDL.h>
 
 class MainWindow final {
-public:
+private:
     int width;
     int height;
     SDL_Window* gWindow;

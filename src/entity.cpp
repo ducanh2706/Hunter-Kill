@@ -15,19 +15,8 @@ Entity::Entity() {
 }
 
 Entity::~Entity() {
-    if (texture != nullptr) {
-        delete texture;
-        texture = nullptr;
-    }
-
-    if (rect != NULL) {
-        delete rect;
-        rect = nullptr;
-    }
-
-    if (sprite != NULL) {
+    if (sprite != nullptr) {
         delete sprite;
-        sprite = nullptr;
     }
 }
 
